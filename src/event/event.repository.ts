@@ -150,7 +150,7 @@ export class EventRepository {
   }
 
   async getEvents(query: EventQuery): Promise<EventData[]> {
-    return this.prisma.event.findMany({
+    return this.prisma..findMany({
       where: {
         categoryId: query.categoryId,
         eventCity: {
