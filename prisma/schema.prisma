@@ -56,11 +56,12 @@ model User {
   meetingJoinUser MeetingJoinUser[]
   preferredAlcohol UserPreferredAlcohol[]
   communityJoinUser CommunityJoinUser[]
-  userMatching UserMatching[]
   codingInfo UserCodingInfo[]
 
   university University @relation(fields: [universityId], references: [id])
   mbti Mbti @relation(fields: [mbtiId], references: [id])
+  matchingsAsUser1 UserMatching[] @relation("UserMatchingToUser1")
+  matchingsAsUser2 UserMatching[] @relation("UserMatchingToUser2")
   
 
 
@@ -165,8 +166,8 @@ model UserMatching {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user1 User @relation(fields: [userId1], references: [id])
-  user2 User @relation(fields: [userId2], references: [id])
+  user1 User @relation("UserMatchingToUser1", fields: [userId1], references: [id])
+  user2 User @relation("UserMatchingToUser2", fields: [userId2], references: [id])
 
   @@map("user_matching")
 }
@@ -179,7 +180,7 @@ model Category {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user  User[]
+  
   meeting Meeting[]
 
   @@map("category")
