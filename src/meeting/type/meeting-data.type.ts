@@ -5,6 +5,8 @@ export type MeetingData = {
   description: string;
   categoryId: number;
   meetingImageUrl: string | null;
+  location: string;
+  keyword: string;
   meetingJoinUser: {
     user: {
       id: number;

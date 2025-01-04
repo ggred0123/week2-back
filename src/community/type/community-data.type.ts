@@ -1,7 +1,6 @@
 export type CommunityData = {
   id: number;
   title: string;
-  maxPeople: number;
 };
 
 export type CommunityContentData = {
@@ -10,7 +9,7 @@ export type CommunityContentData = {
   title: string;
   content: string;
   likeCount: number;
-  contentImageUrl: string;
+  contentImageUrl: string | null;
 };
 
 export type ReplyData = {

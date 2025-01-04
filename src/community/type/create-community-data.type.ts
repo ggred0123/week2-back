@@ -6,7 +6,7 @@ export type CreateCommunityContentData = {
   communityId: number;
   title: string;
   content: string;
-  contentImageUrl: string | null;
+  contentImageUrl?: string | null;
 };
 
 export type CreateReplyData = {

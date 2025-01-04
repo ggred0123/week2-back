@@ -57,6 +57,18 @@ export class MeetingDto {
   })
   maxPeople!: number;
 
+  @ApiProperty({
+    description: "위치",
+    type: String,
+  })
+  location!: string;
+
+  @ApiProperty({
+    description: "키워드",
+    type: String,
+  })
+  keyword!: string;
+
   static from(data: MeetingData): MeetingDto {
     return {
       id: data.id,
@@ -68,6 +80,8 @@ export class MeetingDto {
       startTime: data.startTime,
       endTime: data.endTime,
       maxPeople: data.maxPeople,
+      location: data.location,
+      keyword: data.keyword,
     };
   }
 

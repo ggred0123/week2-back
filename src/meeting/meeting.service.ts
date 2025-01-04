@@ -49,6 +49,8 @@ export class MeetingService {
       startTime: payload.startTime,
       endTime: payload.endTime,
       maxPeople: payload.maxPeople,
+      location: payload.location,
+      keyword: payload.keyword,
     };
 
     const meeting = await this.meetingRepository.createMeeting(data);

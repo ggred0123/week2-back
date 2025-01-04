@@ -57,6 +57,7 @@ model User {
   preferredAlcohol UserPreferredAlcohol[]
   codingInfo UserCodingInfo[]
   reply Reply[]
+  communityContent CommunityContent[]
   callerUserMatching UserMatching[] @relation("CallerRelation")
   calleeUserMatching UserMatching[] @relation("CalleeRelation")
   
@@ -252,6 +253,7 @@ model Community {
 model CommunityContent {
   id        Int      @id @default(autoincrement())
   communityId Int @map("community_id")
+  writedUserId Int @map("user_id")
   title String
   content String
   likeCount Int @default(0)
@@ -260,6 +262,7 @@ model CommunityContent {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   reply Reply[]
+  writedUser User @relation(fields: [writedUserId], references: [id])
 
   community Community @relation(fields: [communityId], references: [id])
   @@map("community_content")

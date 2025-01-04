@@ -6,33 +6,54 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { CommunityRepository } from "./community.repository";
-import { CreateCommunityPayload } from "./payload/create-community.payload";
+import {
+  CreateCommunityContentPayload,
+  CreateCommunityPayload,
+} from "./payload/create-community.payload";
 import { CommunityDto, CommunityListDto } from "./dto/community.dto";
-import { CreateCommunityData } from "./type/create-community-data.type";
+import {
+  CreateCommunityContentData,
+  CreateCommunityData,
+} from "./type/create-community-data.type";
 import { UserBaseInfo } from "src/auth/type/user-base-info.type";
 import { UpdateCommunityData } from "./type/update-community-data.type";
 import { PatchUpdateCommunityPayload } from "./payload/patch-update-community.payload";
 import { ApproveCommunityJoinPayload } from "./payload/approve-community-join.payload";
+import { CommunityContentDto } from "./dto/communityContent.dto";
 
 @Injectable()
 export class CommunityService {
   constructor(private readonly communityRepository: CommunityRepository) {}
 
   async createCommunity(
-    payload: CreateCommunityPayload,
-    user: UserBaseInfo
+    payload: CreateCommunityPayload
   ): Promise<CommunityDto> {
     const createData: CreateCommunityData = {
-      leadId: user.id,
-      name: payload.name,
-      description: payload.description,
-      maxPeople: payload.maxPeople,
+      title: payload.title,
     };
 
     const community =
       await this.communityRepository.createCommunity(createData);
 
     return CommunityDto.from(community);
+  }
+
+  async createCommunityContent(
+    communityId: number,
+    payload: CreateCommunityContentPayload,
+    user: UserBaseInfo
+  ): Promise<CommunityContentDto> {
+    const createData: CreateCommunityContentData = {
+      communityId,
+      title: payload.title,
+      content: payload.content,
+      contentImageUrl: payload.contentImageUrl,
+    };
+
+    const communityContent =
+      await this.communityRepository.createCommunityContent(createData);
+
+    return CommunityContentDto.from(communityContent);
   }
 
   async joinCommunity(communityId: number, user: UserBaseInfo): Promise<void> {

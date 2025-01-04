@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsInt, IsString, Min } from "class-validator";
+import { IsInt, IsOptional, IsString, Min } from "class-validator";
 import { Type } from "class-transformer";
 
 export class CreateCommunityPayload {
@@ -8,20 +8,29 @@ export class CreateCommunityPayload {
     description: "클럽 이름",
     type: String,
   })
-  name!: string;
+  title!: string;
+}
+
+export class CreateCommunityContentPayload {
+  @IsString()
+  @ApiProperty({
+    description: "커뮤니티 글 제목",
+    type: String,
+  })
+  title!: string;
 
   @IsString()
   @ApiProperty({
-    description: "클럽 설명",
+    description: "커뮤니티 글 내용",
     type: String,
   })
-  description!: string;
+  content!: string;
 
-  @IsInt()
-  @Min(1)
-  @ApiProperty({
-    description: "최대 인원",
-    type: Number,
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({
+    description: "커뮤니티 글 이미지 URL",
+    type: String,
   })
-  maxPeople!: number;
+  contentImageUrl?: string | null;
 }

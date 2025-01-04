@@ -47,7 +47,7 @@ export class MeetingController {
     return this.meetingService.createMeeting(payload, user);
   }
 
-  @Get()
+  @Get(":categoryId")
   @ApiOperation({ summary: "모임 전체 또는 필터 조회" })
   @ApiOkResponse({ type: MeetingListDto })
   async getMeetings(@Query() query: MeetingQuery): Promise<MeetingListDto> {

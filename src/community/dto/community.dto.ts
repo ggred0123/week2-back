@@ -15,13 +15,10 @@ export class CommunityDto {
   })
   title!: string;
 
-  static from(club: CommunityData): CommunityDto {
+  static from(community: CommunityData): CommunityDto {
     return {
-      leadId: club.leadId,
-      id: club.id,
-      name: club.name,
-      description: club.description,
-      maxPeople: club.maxPeople,
+      id: community.id,
+      title: community.title,
     };
   }
 
