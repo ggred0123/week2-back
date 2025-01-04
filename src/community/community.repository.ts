@@ -51,7 +51,6 @@ export class CommunityRepository {
         contentImageUrl: true,
         likeCount: true,
         createdAt: true,
-        updatedAt: true,
         reply: {
           select: {
             id: true,
@@ -89,7 +88,6 @@ export class CommunityRepository {
         contentImageUrl: true,
         likeCount: true,
         createdAt: true,
-        updatedAt: true,
         writedUserId: true,
         reply: {
           select: {
@@ -120,9 +118,6 @@ export class CommunityRepository {
         createdAt: {
           gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
         },
-        updatedAt: {
-          gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
-        },
       },
       orderBy: {
         likeCount: "desc",
@@ -137,7 +132,6 @@ export class CommunityRepository {
         contentImageUrl: true,
         likeCount: true,
         createdAt: true,
-        updatedAt: true,
         reply: {
           select: {
             id: true,
@@ -165,7 +159,6 @@ export class CommunityRepository {
         contentImageUrl: true,
         likeCount: true,
         createdAt: true,
-        updatedAt: true,
         reply: {
           select: {
             id: true,
@@ -214,7 +207,6 @@ export class CommunityRepository {
         contentImageUrl: true,
         likeCount: true,
         createdAt: true,
-        updatedAt: true,
         reply: {
           select: {
             id: true,

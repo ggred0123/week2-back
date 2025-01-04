@@ -21,7 +21,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { CommunityDto } from "./dto/community.dto";
+import { CommunityDto, CommunityListDto } from "./dto/community.dto";
 import {
   CreateCommunityContentPayload,
   CreateCommunityPayload,
@@ -114,6 +114,14 @@ export class CommunityController {
     );
   }
 
+  @Get("communities")
+  @ApiOperation({ summary: "커뮤니티를 조회합니다." })
+  @ApiCreatedResponse({ type: CommunityListDto })
+  async getCommunities(): Promise<CommunityListDto> {
+    return this.communityService.getCommunities();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(":communityContentId/hotcontent")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

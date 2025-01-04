@@ -44,6 +44,11 @@ export class CommunityService {
     return CommunityDto.from(community);
   }
 
+  async getCommunities(): Promise<CommunityListDto> {
+    const communities = await this.communityRepository.getCommunities();
+    return CommunityListDto.from(communities);
+  }
+
   async createCommunityContent(
     communityId: number,
     payload: CreateCommunityContentPayload,

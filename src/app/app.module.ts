@@ -8,6 +8,7 @@ import { UserModule } from "../user/user.module";
 import { AuthModule } from "../auth/auth.module";
 import { MeetingModule } from "../meeting/meeting.module";
 import { CategoryModule } from "../category/category.module";
+import { CommunityModule } from "src/community/community.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CategoryModule } from "../category/category.module";
     UserModule,
     CategoryModule,
     CommonModule,
+    CommunityModule,
   ],
   controllers: [AppController],
   providers: [AppService],
