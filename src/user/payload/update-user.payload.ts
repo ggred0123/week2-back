@@ -5,15 +5,16 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-} from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-
+  IsArray,
+} from "class-validator";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { Type } from "class-transformer";
+import { MadCampStatus, Sex } from "../enum/user.enum";
 export class UpdateUserPayload {
   @IsOptional()
   @IsEmail()
   @ApiPropertyOptional({
-    description: '이메일',
+    description: "이메일",
     type: String,
   })
   email?: string | null;
@@ -21,7 +22,7 @@ export class UpdateUserPayload {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({
-    description: '이름',
+    description: "이름",
     type: String,
   })
   name?: string | null;
@@ -30,7 +31,7 @@ export class UpdateUserPayload {
   @IsDate()
   @Type(() => Date)
   @ApiPropertyOptional({
-    description: '생일',
+    description: "생일",
     type: Date,
     nullable: true,
   })
@@ -40,18 +41,71 @@ export class UpdateUserPayload {
   @IsInt()
   @IsPositive()
   @ApiPropertyOptional({
-    description: '도시 ID',
+    description: "대학 ID",
     type: Number,
-    nullable: true,
   })
-  cityId?: number | null;
+  universityId?: number | null;
 
   @IsOptional()
   @IsInt()
   @IsPositive()
   @ApiPropertyOptional({
-    description: '카테고리 ID',
+    description: "성별",
+    enum: Sex,
+  })
+  sex?: Sex | null;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  @ApiPropertyOptional({
+    description: "MBTI ID",
     type: Number,
   })
-  categoryId?: number | null;
+  mbtiId?: number | null;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  @ApiPropertyOptional({
+    description: "분반 ID",
+    type: Number,
+  })
+  classId?: number | null;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  @ApiPropertyOptional({
+    description: "알콜 레벨",
+    type: Number,
+  })
+  alcoholLevel?: number | null;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({
+    description: "유저 이미지 URL",
+    type: String,
+    nullable: true,
+  })
+  imageUrl?: string | null;
+
+  @IsOptional()
+  @IsInt({ each: true })
+  @IsPositive({ each: true })
+  @IsArray()
+  @ApiPropertyOptional({
+    description: "선호 알콜 ID",
+    type: [Number],
+  })
+  alcoholIds?: number[] | null;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({
+    description: "매드 캠프 상태",
+    enum: MadCampStatus,
+  })
+  madCampStatus?: MadCampStatus | null;
 }

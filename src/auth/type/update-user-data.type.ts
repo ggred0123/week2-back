@@ -1,9 +1,17 @@
+import { MadCampStatus, Sex } from "src/user/enum/user.enum";
+
 export type UpdateUserData = {
   email?: string;
   password?: string;
   name?: string;
-  birthday?: Date | null;
-  categoryId?: number;
-  cityId?: number | null;
+  universityId?: number;
+  birthday?: Date;
+  classId?: number;
+  mbtiId?: number;
+  sex?: Sex;
+  alcoholIds?: number[];
+  madCampStatus?: MadCampStatus;
+  alcoholLevel?: number;
+  imageUrl?: string | null;
   refreshToken?: string | null;
 };

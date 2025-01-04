@@ -1,22 +1,28 @@
-import { PrismaService } from '../common/services/prisma.service';
-import { Injectable } from '@nestjs/common';
-import { Category, User } from '@prisma/client';
-import { UpdateUserData } from '../auth/type/update-user-data.type';
-
+import { PrismaService } from "../common/services/prisma.service";
+import { Injectable } from "@nestjs/common";
+import { Category, User } from "@prisma/client";
+import { UpdateUserData } from "../auth/type/update-user-data.type";
+import { UserData } from "./type/user-data.type";
 @Injectable()
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUserById(userId: number): Promise<User | null> {
-    return this.prisma.user.findFirst({
+  async getUserById(userId: number): Promise<UserData | null> {
+    return this.prisma.user.findUnique({
       where: {
         id: userId,
-        deletedAt: null,
+      },
+      include: {
+        preferredAlcohol: {
+          select: {
+            alcoholId: true,
+          },
+        },
       },
     });
   }
 
-  async updateUser(userId: number, data: UpdateUserData): Promise<User> {
+  async updateUser(userId: number, data: UpdateUserData): Promise<UserData> {
     return this.prisma.user.update({
       where: {
         id: userId,
@@ -25,8 +31,38 @@ export class UserRepository {
         name: data.name,
         email: data.email,
         birthday: data.birthday,
-        cityId: data.cityId,
-        categoryId: data.categoryId,
+        sex: data.sex,
+        mbtiId: data.mbtiId,
+        classId: data.classId,
+        imageUrl: data.imageUrl,
+        preferredAlcohol: data.alcoholIds
+          ? {
+              deleteMany: {},
+              createMany: {
+                data: data.alcoholIds.map((alcoholId) => ({
+                  alcoholId,
+                })),
+              },
+            }
+          : undefined,
+      },
+      select: {
+        id: true,
+        preferredAlcohol: {
+          select: {
+            alcoholId: true,
+          },
+        },
+        universityId: true,
+        alcoholLevel: true,
+        madCampStatus: true,
+        sex: true,
+        mbtiId: true,
+        classId: true,
+        imageUrl: true,
+        email: true,
+        name: true,
+        birthday: true,
       },
     });
   }
@@ -35,37 +71,9 @@ export class UserRepository {
     const user = await this.prisma.user.findFirst({
       where: {
         email,
-        deletedAt: null,
       },
     });
 
     return !!user;
-  }
-
-  async getCategoryById(id: number): Promise<Category | null> {
-    return this.prisma.category.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
-
-  async getCityById(id: number): Promise<Category | null> {
-    return this.prisma.city.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
-
-  async deleteUser(userId: number): Promise<void> {
-    await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
   }
 }
