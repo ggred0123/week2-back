@@ -9,17 +9,23 @@ import { CommunityRepository } from "./community.repository";
 import {
   CreateCommunityContentPayload,
   CreateCommunityPayload,
+  CreateReplyPayload,
 } from "./payload/create-community.payload";
 import { CommunityDto, CommunityListDto } from "./dto/community.dto";
 import {
   CreateCommunityContentData,
   CreateCommunityData,
+  CreateReplyData,
 } from "./type/create-community-data.type";
 import { UserBaseInfo } from "src/auth/type/user-base-info.type";
-import { UpdateCommunityData } from "./type/update-community-data.type";
-import { PatchUpdateCommunityPayload } from "./payload/patch-update-community.payload";
-import { ApproveCommunityJoinPayload } from "./payload/approve-community-join.payload";
-import { CommunityContentDto } from "./dto/communityContent.dto";
+import { UpdateCommunityContentData } from "./type/update-community-data.type";
+import { PatchUpdateCommunityContentPayload } from "./payload/patch-update-community.payload";
+import {
+  CommunityContentDto,
+  CommunityContentListDto,
+} from "./dto/communityContent.dto";
+
+import { ReplyDto, ReplyListDto } from "./dto/reply.dto";
 
 @Injectable()
 export class CommunityService {
@@ -48,178 +54,122 @@ export class CommunityService {
       title: payload.title,
       content: payload.content,
       contentImageUrl: payload.contentImageUrl,
+      writedUserId: user.id,
     };
 
     const communityContent =
-      await this.communityRepository.createCommunityContent(createData);
+      await this.communityRepository.createCommunityContent(
+        createData,
+        user.id
+      );
 
     return CommunityContentDto.from(communityContent);
   }
 
-  async joinCommunity(communityId: number, user: UserBaseInfo): Promise<void> {
-    const isUserJoinedCommunity =
-      await this.communityRepository.isUserJoinedCommunity(
-        user.id,
-        communityId
-      );
-
-    if (isUserJoinedCommunity) {
-      throw new ConflictException("해당 유저가 이미 참가한 클럽입니다.");
-    }
-    const userWaiting = await this.communityRepository.isUserWaitingCommunity(
-      user.id,
-      communityId
-    );
-    if (userWaiting) {
-      throw new ConflictException("해당 유저가 이미 참가 신청한 클럽입니다.");
-    }
-    const isUserRejected = await this.communityRepository.isUserAlreadyRejected(
-      user.id,
-      communityId
-    );
-    if (isUserRejected) {
-      throw new ConflictException("거절된 클럽에 다시 참가할 수 없습니다.");
-    }
-
-    const community =
-      await this.communityRepository.getCommunityById(communityId);
-
-    if (!community) {
-      throw new NotFoundException("Community가 존재하지 않습니다.");
-    }
-
-    await this.communityRepository.joinCommunityWaiting(communityId, user.id);
-  }
-  async outCommunity(communityId: number, user: UserBaseInfo): Promise<void> {
-    const isUserJoinedCommunity =
-      await this.communityRepository.isUserJoinedCommunity(
-        user.id,
-        communityId
-      );
-
-    if (!isUserJoinedCommunity) {
-      throw new ConflictException("해당 유저가 참가하지 않은 클럽입니다.");
-    }
-
-    const community =
-      await this.communityRepository.getCommunityById(communityId);
-    if (!community) {
-      throw new NotFoundException("Community가 존재하지 않습니다.");
-    }
-
-    if (community.leadId === user.id) {
-      throw new ConflictException("lead는 클럽에서 나갈 수 없습니다.");
-    }
-
-    await this.communityRepository.outCommunity(communityId, user.id);
-  }
-
-  async approveCommunityJoin(
-    communityId: number,
-    payload: ApproveCommunityJoinPayload,
+  async patchUpdateCommunityContent(
+    communityContentId: number,
+    payload: PatchUpdateCommunityContentPayload,
     user: UserBaseInfo
-  ): Promise<void> {
-    await this.checkLeadPermissionOfCommunity(communityId, user.id);
-
-    const IsUserWaitingCommunity =
-      await this.communityRepository.isUserWaitingCommunity(
-        communityId,
-        payload.userId
-      );
-    if (!IsUserWaitingCommunity) {
-      throw new ConflictException("해당 유저가 대기중인 클럽이 아닙니다.");
-    }
-
-    if (payload.approve) {
-      await this.communityRepository.approveCommunityJoin(
-        communityId,
-        payload.userId
-      );
-      return;
-    }
-    await this.communityRepository.rejectCommunityJoin(
-      communityId,
-      payload.userId
-    );
-  }
-  async patchUpdateCommunity(
-    communityId: number,
-    payload: PatchUpdateCommunityPayload,
-    user: UserBaseInfo
-  ): Promise<CommunityDto> {
-    if (payload.name === null) {
+  ): Promise<CommunityContentDto> {
+    if (payload.title === null) {
       throw new BadRequestException("title은 null이 될 수 없습니다.");
     }
-    if (payload.description === null) {
-      throw new BadRequestException("description은 null이 될 수 없습니다.");
+    if (payload.content === null) {
+      throw new BadRequestException("content은 null이 될 수 없습니다.");
     }
-    if (payload.maxPeople === null) {
-      throw new BadRequestException("maxPeople은 null이 될 수 없습니다.");
-    }
-    if (payload.leadId === null) {
-      throw new BadRequestException("leadId는 null이 될 수 없습니다.");
+    if (payload.contentImageUrl === null) {
+      throw new BadRequestException("contentImageUrl은 null이 될 수 없습니다.");
     }
 
-    await this.checkLeadPermissionOfCommunity(communityId, user.id);
+    await this.checkWriterPermissionOfCommunity(communityContentId, user.id);
 
-    if (payload.leadId) {
-      const checkUserInCommunity =
-        await this.communityRepository.isUserJoinedCommunity(
-          communityId,
-          payload.leadId
-        );
-      if (!checkUserInCommunity) {
-        throw new ConflictException(
-          "클럽 리드로 지정된 유저가 클럽에 가입되어 있지 않습니다."
-        );
-      }
-    }
-
-    const updateData: UpdateCommunityData = {
-      name: payload.name,
-      leadId: payload.leadId,
-      description: payload.description,
-      maxPeople: payload.maxPeople,
+    const updateData: UpdateCommunityContentData = {
+      title: payload.title,
+      content: payload.content,
+      contentImageUrl: payload.contentImageUrl,
     };
 
-    const communityJoinCount =
-      await this.communityRepository.getCommunityJoinCount(communityId);
-
-    if (payload.maxPeople && payload.maxPeople < communityJoinCount) {
-      throw new ConflictException(
-        "정원을 현재 참가자 수보다 작게 수정할 수 없습니다."
+    const updatedCommunityContent =
+      await this.communityRepository.patchUpdateCommunityContent(
+        communityContentId,
+        updateData,
+        user.id
       );
-    }
 
-    const updatedCommunity = await this.communityRepository.updateCommunity(
-      communityId,
-      updateData
-    );
-
-    return CommunityDto.from(updatedCommunity);
-  }
-  async deleteCommunity(
-    communityId: number,
-    user: UserBaseInfo
-  ): Promise<void> {
-    await this.checkLeadPermissionOfCommunity(communityId, user.id);
-
-    await this.communityRepository.deleteCommunity(communityId);
+    return CommunityContentDto.from(updatedCommunityContent);
   }
 
-  private async checkLeadPermissionOfCommunity(
-    communityId: number,
-    userId: number
-  ) {
-    const community =
-      await this.communityRepository.getCommunityById(communityId);
+  async getCommunityContents(
+    communityId: number
+  ): Promise<CommunityContentListDto> {
+    const communityContents =
+      await this.communityRepository.getCommunityContents(communityId);
+    return CommunityContentListDto.from(communityContents);
+  }
 
-    if (!community) {
+  async getCommunityContent(
+    communityContentId: number
+  ): Promise<CommunityContentDto> {
+    const communityContent =
+      await this.communityRepository.getCommunityContentById(
+        communityContentId
+      );
+
+    if (communityContent === null) {
       throw new NotFoundException("community가 존재하지 않습니다.");
     }
 
-    if (community.leadId !== userId) {
-      throw new ForbiddenException("리드가 아닙니다!");
+    return CommunityContentDto.from(communityContent);
+  }
+
+  async getHotCommunityContents(): Promise<CommunityContentListDto> {
+    const communityContents =
+      await this.communityRepository.getHotCommunityContents();
+    return CommunityContentListDto.from(communityContents);
+  }
+
+  async deleteCommunityContent(
+    communityContentId: number,
+    user: UserBaseInfo
+  ): Promise<void> {
+    await this.checkWriterPermissionOfCommunity(communityContentId, user.id);
+
+    await this.communityRepository.deleteCommunityContent(communityContentId);
+  }
+
+  async createReply(
+    communityContentId: number,
+    payload: CreateReplyPayload,
+    user: UserBaseInfo
+  ): Promise<ReplyDto> {
+    const createData: CreateReplyData = {
+      communityContentId: communityContentId,
+      userId: user.id,
+      content: payload.content,
+    };
+
+    return this.communityRepository.createReply(createData);
+  }
+
+  async deleteReply(replyId: number): Promise<void> {
+    await this.communityRepository.deleteReply(replyId);
+  }
+
+  private async checkWriterPermissionOfCommunity(
+    communityContentId: number,
+    userId: number
+  ) {
+    const communityContent =
+      await this.communityRepository.getCommunityContentById(
+        communityContentId
+      );
+
+    if (!communityContent) {
+      throw new NotFoundException("community가 존재하지 않습니다.");
+    }
+
+    if (communityContent.writedUserId !== userId) {
+      throw new ForbiddenException("작성자가 아닙니다!");
     }
   }
 }

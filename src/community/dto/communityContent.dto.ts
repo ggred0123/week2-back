@@ -49,7 +49,7 @@ export class CommunityContentDto {
       title: communityContent.title,
       content: communityContent.content,
       likeCount: communityContent.likeCount,
-      contentImageUrl: communityContent.contentImageUrl,
+      contentImageUrl: communityContent.contentImageUrl ?? undefined,
     };
   }
 
@@ -59,5 +59,23 @@ export class CommunityContentDto {
     return communityContents.map((communityContent) =>
       this.from(communityContent)
     );
+  }
+}
+
+export class CommunityContentListDto {
+  @ApiProperty({
+    description: "커뮤니티 글 목록",
+    type: [CommunityContentDto],
+  })
+  contents!: CommunityContentDto[];
+
+  static from(
+    communityContents: CommunityContentData[]
+  ): CommunityContentListDto {
+    return {
+      contents: communityContents.map((content) =>
+        CommunityContentDto.from(content)
+      ),
+    };
   }
 }

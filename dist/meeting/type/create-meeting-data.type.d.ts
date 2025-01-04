@@ -7,4 +7,6 @@ export type CreateMeetingData = {
     maxPeople: number;
     startTime: Date;
     endTime: Date;
+    location: string;
+    keyword: string;
 };

@@ -25,15 +25,18 @@ import { CommunityDto } from "./dto/community.dto";
 import {
   CreateCommunityContentPayload,
   CreateCommunityPayload,
+  CreateReplyPayload,
 } from "./payload/create-community.payload";
 import { JwtAuthGuard } from "src/auth/guard/jwt-auth.guard";
 import { UserBaseInfo } from "src/auth/type/user-base-info.type";
 import { CurrentUser } from "src/auth/decorator/user.decorator";
-import { ApproveCommunityJoinPayload } from "./payload/approve-community-join.payload";
-import { PatchUpdateCommunityPayload } from "./payload/patch-update-community.payload";
+import { PatchUpdateCommunityContentPayload } from "./payload/patch-update-community.payload";
 import { Community } from "@prisma/client";
-import { CommunityContentDto } from "./dto/communityContent.dto";
-
+import {
+  CommunityContentDto,
+  CommunityContentListDto,
+} from "./dto/communityContent.dto";
+import { ReplyDto, ReplyListDto } from "./dto/reply.dto";
 @Controller("communities")
 @ApiTags("Community API")
 export class CommunityController {
@@ -46,6 +49,52 @@ export class CommunityController {
     @Body() payload: CreateCommunityPayload
   ): Promise<CommunityDto> {
     return this.communityService.createCommunity(payload);
+  }
+
+  @Get(":communityId")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "커뮤니티를 조회합니다." })
+  @ApiCreatedResponse({ type: CommunityContentListDto })
+  async getCommunity(
+    @Param("communityId", ParseIntPipe) communityId: number
+  ): Promise<CommunityContentListDto> {
+    return this.communityService.getCommunityContents(communityId);
+  }
+
+  @Get(":communityContentId")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "커뮤니티 글을 조회합니다." })
+  @ApiCreatedResponse({ type: CommunityContentDto })
+  async getCommunityContent(
+    @Param("communityContentId", ParseIntPipe) communityContentId: number
+  ): Promise<CommunityContentDto> {
+    return this.communityService.getCommunityContent(communityContentId);
+  }
+
+  @Post(":communityContentId/reply")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "커뮤니티 글의 댓글을 생성합니다." })
+  @ApiCreatedResponse({ type: ReplyDto })
+  async createReply(
+    @Param("communityContentId", ParseIntPipe) communityContentId: number,
+    @Body() payload: CreateReplyPayload,
+    @CurrentUser() user: UserBaseInfo
+  ): Promise<ReplyDto> {
+    return this.communityService.createReply(communityContentId, payload, user);
+  }
+
+  @Delete(":communityContentId/reply/:replyId")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "커뮤니티 글의 댓글을 삭제합니다." })
+  @ApiNoContentResponse()
+  async deleteReply(
+    @Param("replyId", ParseIntPipe) replyId: number
+  ): Promise<void> {
+    return this.communityService.deleteReply(replyId);
   }
 
   @Post(":communityId/content")
@@ -65,6 +114,15 @@ export class CommunityController {
     );
   }
 
+  @Get(":communityContentId/hotcontent")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "커뮤니티 글을 조회합니다." })
+  @ApiCreatedResponse({ type: CommunityContentListDto })
+  async getHotCommunityContent(): Promise<CommunityContentListDto> {
+    return this.communityService.getHotCommunityContents();
+  }
+
   @Delete(":communityContentId")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -72,9 +130,12 @@ export class CommunityController {
   @ApiOperation({ summary: "커뮤니티 글을 삭제합니다." })
   @ApiNoContentResponse()
   async deleteCommunity(
-    @Param("communityContentId", ParseIntPipe) communityId: number,
+    @Param("communityContentId", ParseIntPipe) communityContentId: number,
     @CurrentUser() user: UserBaseInfo
   ): Promise<void> {
-    return this.communityService.deleteCommunity(communityId, user);
+    return this.communityService.deleteCommunityContent(
+      communityContentId,
+      user
+    );
   }
 }

@@ -27,6 +27,8 @@ let MeetingRepository = class MeetingRepository {
                 startTime: data.startTime,
                 endTime: data.endTime,
                 maxPeople: data.maxPeople,
+                location: data.location,
+                keyword: data.keyword,
             },
             select: {
                 id: true,
@@ -45,6 +47,8 @@ let MeetingRepository = class MeetingRepository {
                         },
                     },
                 },
+                location: true,
+                keyword: true,
                 startTime: true,
                 endTime: true,
                 maxPeople: true,
@@ -64,6 +68,8 @@ let MeetingRepository = class MeetingRepository {
                 startTime: data.startTime,
                 endTime: data.endTime,
                 maxPeople: data.maxPeople,
+                location: data.location,
+                keyword: data.keyword,
             },
             select: {
                 id: true,
@@ -82,6 +88,8 @@ let MeetingRepository = class MeetingRepository {
                         },
                     },
                 },
+                location: true,
+                keyword: true,
                 startTime: true,
                 endTime: true,
                 maxPeople: true,
@@ -121,6 +129,8 @@ let MeetingRepository = class MeetingRepository {
                 description: true,
                 categoryId: true,
                 meetingImageUrl: true,
+                location: true,
+                keyword: true,
                 meetingJoinUser: {
                     select: {
                         user: {
@@ -165,6 +175,8 @@ let MeetingRepository = class MeetingRepository {
                 startTime: true,
                 endTime: true,
                 maxPeople: true,
+                location: true,
+                keyword: true,
             },
         });
     }
@@ -197,6 +209,8 @@ let MeetingRepository = class MeetingRepository {
                 startTime: true,
                 endTime: true,
                 maxPeople: true,
+                location: true,
+                keyword: true,
             },
         });
     }

@@ -9,6 +9,8 @@ export declare class MeetingDto {
     startTime: Date;
     endTime: Date;
     maxPeople: number;
+    location: string;
+    keyword: string;
     static from(data: MeetingData): MeetingDto;
     static fromArray(data: MeetingData[]): MeetingDto[];
 }

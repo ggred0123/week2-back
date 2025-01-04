@@ -1,3 +1,3 @@
 export declare class MeetingQuery {
-    categoryId?: number;
+    categoryId: number;
 }

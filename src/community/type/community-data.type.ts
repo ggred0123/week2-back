@@ -10,6 +10,12 @@ export type CommunityContentData = {
   content: string;
   likeCount: number;
   contentImageUrl: string | null;
+  writedUserId: number;
+  reply: {
+    id: number;
+    userId: number;
+    content: string;
+  }[];
 };
 
 export type ReplyData = {

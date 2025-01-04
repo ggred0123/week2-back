@@ -2,37 +2,29 @@ import { IsDate, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 
-export class PatchUpdateCommunityPayload {
+export class PatchUpdateCommunityContentPayload {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({
-    description: "클럽 이름",
+    description: "커뮤니티 글 제목",
     type: String,
   })
-  name?: string | null;
+  title?: string | null;
 
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({
-    description: "새 리드 id",
-    type: Number,
-  })
-  leadId?: number | null;
-
-  @IsOptional()
-  @IsString()
-  @ApiPropertyOptional({
-    description: "클럽 설명",
+    description: "커뮤니티 글 내용",
     type: String,
   })
-  description?: string | null;
+  content?: string | null;
 
   @IsOptional()
-  @IsInt()
-  @Min(1)
+  @IsString()
   @ApiPropertyOptional({
-    description: "최대 인원",
-    type: Number,
+    description: "커뮤니티 글 이미지 URL",
+    type: String,
+    nullable: true,
   })
-  maxPeople?: number | null;
+  contentImageUrl?: string | null;
 }

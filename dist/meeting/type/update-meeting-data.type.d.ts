@@ -6,4 +6,6 @@ export type UpdateMeetingData = {
     startTime?: Date;
     endTime?: Date;
     maxPeople?: number;
+    location?: string;
+    keyword?: string;
 };
