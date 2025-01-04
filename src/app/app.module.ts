@@ -14,11 +14,9 @@ import { CategoryModule } from "../category/category.module";
     AuthModule,
     configModule,
     MeetingModule,
-
+    UserModule,
     CategoryModule,
     CommonModule,
-
-    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
