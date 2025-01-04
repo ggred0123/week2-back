@@ -23,7 +23,7 @@ export class UserDto {
 
   @ApiProperty({
     description: "매드 캠프 재학 여부",
-    type: String,
+    enum: MadCampStatus,
   })
   madCampStatus!: MadCampStatus;
 

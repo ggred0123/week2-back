@@ -1,4 +1,4 @@
-import { MadCampStatus, PreferredAlcohol, Sex } from "../enum/user.enum";
+import { MadCampStatus, Sex } from "../enum/user.enum";
 export type UserData = {
   id: number;
   universityId: number;

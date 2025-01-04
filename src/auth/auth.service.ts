@@ -3,47 +3,33 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
-} from '@nestjs/common';
-import { AuthRepository } from './auth.repository';
-import { SignUpPayload } from './payload/sign-up.payload';
-import { BcryptPasswordService } from './bcrypt-password.service';
-import { SignUpData } from './type/sign-up-data.type';
-import { Tokens } from './type/tokens.type';
-import { TokenService } from './token.service';
-import { LoginPayload } from './payload/login.payload';
-import { ChangePasswordPayload } from './payload/change-password.payload';
-import { UserBaseInfo } from './type/user-base-info.type';
+} from "@nestjs/common";
+import { AuthRepository } from "./auth.repository";
+import { SignUpPayload } from "./payload/sign-up.payload";
+import { BcryptPasswordService } from "./bcrypt-password.service";
+import { SignUpData } from "./type/sign-up-data.type";
+import { Tokens } from "./type/tokens.type";
+import { TokenService } from "./token.service";
+import { LoginPayload } from "./payload/login.payload";
+import { ChangePasswordPayload } from "./payload/change-password.payload";
+import { UserBaseInfo } from "./type/user-base-info.type";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly passwordService: BcryptPasswordService,
-    private readonly tokenService: TokenService,
+    private readonly tokenService: TokenService
   ) {}
 
   async signUp(payload: SignUpPayload): Promise<Tokens> {
     const user = await this.authRepository.getUserByEmail(payload.email);
     if (user) {
-      throw new ConflictException('이미 사용중인 이메일입니다.');
-    }
-
-    const category = await this.authRepository.getCategoryById(
-      payload.categoryId,
-    );
-    if (!category) {
-      throw new NotFoundException('존재하지 않는 카테고리입니다.');
-    }
-
-    if (payload.cityId) {
-      const city = await this.authRepository.getCityById(payload.cityId);
-      if (!city) {
-        throw new NotFoundException('존재하지 않는 도시입니다.');
-      }
+      throw new ConflictException("이미 사용중인 이메일입니다.");
     }
 
     const hashedPassword = await this.passwordService.getEncryptPassword(
-      payload.password,
+      payload.password
     );
 
     const inputData: SignUpData = {
@@ -51,8 +37,14 @@ export class AuthService {
       password: hashedPassword,
       name: payload.name,
       birthday: payload.birthday,
-      categoryId: payload.categoryId,
-      cityId: payload.cityId,
+      universityId: payload.universityId,
+      major: payload.major,
+      alcoholLevel: payload.alcoholLevel,
+      madCampStatus: payload.madCampStatus,
+      mbtiId: payload.mbtiId,
+      classId: payload.classId,
+      sex: payload.sex,
+      imageUrl: payload.imageUrl ?? null,
     };
 
     const createdUser = await this.authRepository.createUser(inputData);
@@ -63,16 +55,16 @@ export class AuthService {
   async login(payload: LoginPayload): Promise<Tokens> {
     const user = await this.authRepository.getUserByEmail(payload.email);
     if (!user) {
-      throw new NotFoundException('존재하지 않는 이메일입니다.');
+      throw new NotFoundException("존재하지 않는 이메일입니다.");
     }
 
     const isPasswordMatch = await this.passwordService.validatePassword(
       payload.password,
-      user.password,
+      user.password
     );
 
     if (!isPasswordMatch) {
-      throw new ConflictException('비밀번호가 일치하지 않습니다.');
+      throw new ConflictException("비밀번호가 일치하지 않습니다.");
     }
 
     return this.generateTokens(user.id);
@@ -83,11 +75,11 @@ export class AuthService {
 
     const user = await this.authRepository.getUserById(data.userId);
     if (!user) {
-      throw new NotFoundException('존재하지 않는 사용자입니다.');
+      throw new NotFoundException("존재하지 않는 사용자입니다.");
     }
 
     if (user.refreshToken !== refreshToken) {
-      throw new UnauthorizedException('유효하지 않은 토큰입니다.');
+      throw new UnauthorizedException("유효하지 않은 토큰입니다.");
     }
 
     return this.generateTokens(user.id);
@@ -95,19 +87,19 @@ export class AuthService {
 
   async changePassword(
     payload: ChangePasswordPayload,
-    user: UserBaseInfo,
+    user: UserBaseInfo
   ): Promise<void> {
     const isValid = await this.passwordService.validatePassword(
       payload.currentPassword,
-      user.password,
+      user.password
     );
 
     if (!isValid) {
-      throw new UnauthorizedException('현재 비밀번호가 일치하지 않습니다.');
+      throw new UnauthorizedException("현재 비밀번호가 일치하지 않습니다.");
     }
 
     const hashedPassword = await this.passwordService.getEncryptPassword(
-      payload.newPassword,
+      payload.newPassword
     );
 
     await this.authRepository.updateUser(user.id, {

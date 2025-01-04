@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { Category, User } from "@prisma/client";
 import { UpdateUserData } from "../auth/type/update-user-data.type";
 import { UserData } from "./type/user-data.type";
+import { MadCampStatus } from "@prisma/client";
 @Injectable()
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -35,6 +36,7 @@ export class UserRepository {
         mbtiId: data.mbtiId,
         classId: data.classId,
         imageUrl: data.imageUrl,
+        madCampStatus: data.madCampStatus,
         preferredAlcohol: data.alcoholIds
           ? {
               deleteMany: {},

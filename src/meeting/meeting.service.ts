@@ -11,8 +11,6 @@ import { MeetingDto, MeetingListDto } from "./dto/meeting.dto";
 import { CreateMeetingData } from "./type/create-meeting-data.type";
 import { MeetingRepository } from "./meeting.repository";
 import { MeetingQuery } from "./query/meeting.query";
-import { MeetingDetailDto } from "./dto/meeting-detail.dto";
-import { PutUpdateMeetingPayload } from "./payload/put-update-meeting.payload";
 import { UpdateMeetingData } from "./type/update-meeting-data.type";
 import { PatchUpdateMeetingPayload } from "./payload/patch-update-meeting.payload";
 
@@ -24,17 +22,12 @@ export class MeetingService {
     payload: CreateMeetingPayload,
     user: UserBaseInfo
   ): Promise<MeetingDto> {
-    const [category, cities] = await Promise.all([
+    const [category] = await Promise.all([
       this.meetingRepository.findCategoryById(payload.categoryId),
-      this.meetingRepository.findCitiesByIds(payload.cityIds),
     ]);
 
     if (!category) {
       throw new NotFoundException("카테고리를 찾을 수 없습니다.");
-    }
-
-    if (cities.length !== payload.cityIds.length) {
-      throw new NotFoundException("도시를 찾을 수 없습니다.");
     }
 
     if (payload.startTime >= payload.endTime) {
@@ -52,7 +45,7 @@ export class MeetingService {
       title: payload.title,
       description: payload.description,
       categoryId: payload.categoryId,
-      cityIds: payload.cityIds,
+      meetingImageUrl: payload.meetingImageUrl ?? null,
       startTime: payload.startTime,
       endTime: payload.endTime,
       maxPeople: payload.maxPeople,
@@ -73,73 +66,6 @@ export class MeetingService {
     const meetings = await this.meetingRepository.getMeetingsJoinedBy(user.id);
 
     return MeetingListDto.from(meetings);
-  }
-
-  async getMeetingById(meetingId: number): Promise<MeetingDetailDto> {
-    const meeting =
-      await this.meetingRepository.findMeetingDetailById(meetingId);
-
-    if (!meeting) {
-      throw new NotFoundException("모임을 찾을 수 없습니다.");
-    }
-
-    return MeetingDetailDto.from(meeting);
-  }
-
-  async putUpdateMeeting(
-    meetingId: number,
-    payload: PutUpdateMeetingPayload,
-    user: UserBaseInfo
-  ): Promise<MeetingDto> {
-    const meeting = await this.meetingRepository.findMeetingById(meetingId);
-
-    if (!meeting) {
-      throw new NotFoundException("모임을 찾을 수 없습니다.");
-    }
-
-    if (meeting.hostId !== user.id) {
-      throw new ForbiddenException("모임 주최자만 수정할 수 있습니다");
-    }
-
-    if (payload.startTime >= payload.endTime) {
-      throw new BadRequestException("시작 시간은 종료 시간보다 빨라야 합니다.");
-    }
-
-    if (payload.startTime < new Date()) {
-      throw new BadRequestException(
-        "모임 시작 시간은 현재 시간 이후여야 합니다."
-      );
-    }
-
-    const [category, cities] = await Promise.all([
-      this.meetingRepository.findCategoryById(payload.categoryId),
-      this.meetingRepository.findCitiesByIds(payload.cityIds),
-    ]);
-
-    if (!category) {
-      throw new NotFoundException("카테고리를 찾을 수 없습니다.");
-    }
-
-    if (cities.length !== payload.cityIds.length) {
-      throw new NotFoundException("도시를 찾을 수 없습니다.");
-    }
-
-    const data: UpdateMeetingData = {
-      title: payload.title,
-      description: payload.description,
-      categoryId: payload.categoryId,
-      cityIds: payload.cityIds,
-      startTime: payload.startTime,
-      endTime: payload.endTime,
-      maxPeople: payload.maxPeople,
-    };
-
-    const updatedMeeting = await this.meetingRepository.updateMeeting(
-      meetingId,
-      data
-    );
-
-    return MeetingDto.from(updatedMeeting);
   }
 
   async patchUpdateMeeting(
@@ -178,15 +104,6 @@ export class MeetingService {
       );
       if (!category) {
         throw new NotFoundException("카테고리를 찾을 수 없습니다.");
-      }
-    }
-
-    if (payload.cityIds) {
-      const cities = await this.meetingRepository.findCitiesByIds(
-        payload.cityIds
-      );
-      if (cities.length !== payload.cityIds.length) {
-        throw new NotFoundException("도시를 찾을 수 없습니다.");
       }
     }
 
@@ -288,12 +205,12 @@ export class MeetingService {
       throw new BadRequestException("categoryId는 null이 될 수 없습니다.");
     }
 
-    if (payload.cityIds === null) {
-      throw new BadRequestException("cityIds는 null이 될 수 없습니다.");
+    if (payload.meetingImageUrl === null) {
+      throw new BadRequestException("meetingImageUrl은 null이 될 수 없습니다.");
     }
 
     if (payload.startTime === null) {
-      throw new BadRequestException("startTime은 null이 될 수 없습���다.");
+      throw new BadRequestException("startTime은 null이 될 수 없습니다.");
     }
 
     if (payload.endTime === null) {
@@ -308,7 +225,7 @@ export class MeetingService {
       title: payload.title,
       description: payload.description,
       categoryId: payload.categoryId,
-      cityIds: payload.cityIds,
+      meetingImageUrl: payload.meetingImageUrl,
       startTime: payload.startTime,
       endTime: payload.endTime,
       maxPeople: payload.maxPeople,
