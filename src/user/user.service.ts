@@ -9,7 +9,7 @@ import { UserRepository } from "./user.repository";
 import { UserBaseInfo } from "../auth/type/user-base-info.type";
 import { UserDto } from "./dto/user.dto";
 import { UpdateUserPayload } from "./payload/update-user.payload";
-import { UpdateEventData } from "../meeting/type/update-meeting-data.type";
+import { UpdateMeetingData } from "../meeting/type/update-meeting-data.type";
 import { UpdateUserData } from "../auth/type/update-user-data.type";
 
 @Injectable()

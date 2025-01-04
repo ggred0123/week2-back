@@ -1,52 +1,100 @@
-import { IsDate, IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+} from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
+import { MadCampStatus, Sex } from "src/user/enum/user.enum";
 
 export class SignUpPayload {
   @IsEmail()
   @ApiProperty({
-    description: '이메일',
+    description: "이메일",
     type: String,
   })
   email!: string;
 
   @IsString()
   @ApiProperty({
-    description: '비밀번호',
+    description: "비밀번호",
     type: String,
   })
   password!: string;
 
   @IsString()
   @ApiProperty({
-    description: '이름',
+    description: "이름",
     type: String,
   })
   name!: string;
 
-  @IsOptional()
+  @IsInt()
+  @ApiProperty({
+    description: "알콜 레벨",
+    type: Number,
+  })
+  alcoholLevel!: number;
+
+  @IsEnum(MadCampStatus)
+  @ApiProperty({
+    description: "마드캠 상태",
+    enum: MadCampStatus,
+  })
+  madCampStatus!: MadCampStatus;
+
   @IsDate()
   @Type(() => Date)
   @ApiProperty({
-    description: '생년월일',
+    description: "생년월일",
     type: Date,
-    nullable: true,
   })
-  birthday?: Date | null;
+  birthday!: Date;
+
+  @IsInt()
+  @ApiProperty({
+    description: "대학교 ID",
+    type: Number,
+  })
+  universityId!: number;
+
+  @IsString()
+  @ApiProperty({
+    description: "전공",
+    type: String,
+  })
+  major!: string;
+
+  @IsInt()
+  @ApiProperty({
+    description: "MBTI ID",
+    type: Number,
+  })
+  mbtiId!: number;
+
+  @IsInt()
+  @ApiProperty({
+    description: "분반",
+    type: Number,
+  })
+  classId!: number;
+
+  @IsString()
+  @ApiProperty({
+    description: "성별",
+    enum: Sex,
+  })
+  sex!: Sex;
 
   @IsOptional()
-  @IsInt()
+  @IsString()
   @ApiProperty({
-    description: '도시 ID',
-    type: Number,
+    description: "이미지 URL",
+    type: String,
     nullable: true,
   })
-  cityId?: number | null;
-
-  @IsInt()
-  @ApiProperty({
-    description: '카테고리 ID',
-    type: Number,
-  })
-  categoryId!: number;
+  imageUrl?: string | null;
 }
