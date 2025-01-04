@@ -82,6 +82,30 @@ let AuthService = class AuthService {
         });
         return tokens;
     }
+    async googleLogin(googleUser) {
+        const user = await this.authRepository.getUserByEmail(googleUser.email);
+        if (user) {
+            const tokens = await this.generateTokens(user.id);
+            return { tokens, isNewUser: false };
+        }
+        const signUpData = {
+            email: googleUser.email,
+            password: await this.passwordService.getEncryptPassword(Math.random().toString(36)),
+            name: googleUser.name,
+            imageUrl: googleUser.imageUrl,
+            universityId: 1,
+            major: "미입력",
+            alcoholLevel: 0,
+            madCampStatus: "InCamp",
+            mbtiId: 1,
+            classId: 1,
+            sex: "MALE",
+            birthday: new Date(),
+        };
+        const newUser = await this.authRepository.createUser(signUpData);
+        const tokens = await this.generateTokens(newUser.id);
+        return { tokens, isNewUser: true };
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([

@@ -16,6 +16,7 @@ const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const bcrypt_password_service_1 = require("./bcrypt-password.service");
 const token_service_1 = require("./token.service");
+const google_strategy_1 = require("./strategy/google.strategy");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -25,9 +26,9 @@ exports.AuthModule = AuthModule = __decorate([
             jwt_1.JwtModule.registerAsync({
                 inject: [config_1.ConfigService],
                 useFactory: async (configService) => ({
-                    secret: configService.get('JWT_ACCESS_TOKEN_SECRET'),
+                    secret: configService.get("JWT_ACCESS_TOKEN_SECRET"),
                     signOptions: {
-                        expiresIn: `${configService.get('JWT_ACCESS_TOKEN_EXPIRE_TIME')}`,
+                        expiresIn: `${configService.get("JWT_ACCESS_TOKEN_EXPIRE_TIME")}`,
                     },
                 }),
             }),
@@ -39,6 +40,7 @@ exports.AuthModule = AuthModule = __decorate([
             jwt_strategy_1.JwtStrategy,
             bcrypt_password_service_1.BcryptPasswordService,
             token_service_1.TokenService,
+            google_strategy_1.GoogleStrategy,
         ],
     })
 ], AuthModule);

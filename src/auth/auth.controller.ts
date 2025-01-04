@@ -7,7 +7,8 @@ import {
   Req,
   Res,
   UseGuards,
-} from '@nestjs/common';
+  Get,
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -15,97 +16,127 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger';
-import { AuthService } from './auth.service';
-import { TokenDto } from './dto/token.dto';
-import { SignUpPayload } from './payload/sign-up.payload';
-import { Response, Request } from 'express';
-import { LoginPayload } from './payload/login.payload';
-import { ChangePasswordPayload } from './payload/change-password.payload';
-import { CurrentUser } from './decorator/user.decorator';
-import { UserBaseInfo } from './type/user-base-info.type';
-import { JwtAuthGuard } from './guard/jwt-auth.guard';
-
-@Controller('auth')
-@ApiTags('Auth API')
+} from "@nestjs/swagger";
+import { AuthService } from "./auth.service";
+import { TokenDto } from "./dto/token.dto";
+import { SignUpPayload } from "./payload/sign-up.payload";
+import { Response, Request } from "express";
+import { LoginPayload } from "./payload/login.payload";
+import { ChangePasswordPayload } from "./payload/change-password.payload";
+import { CurrentUser } from "./decorator/user.decorator";
+import { UserBaseInfo } from "./type/user-base-info.type";
+import { JwtAuthGuard } from "./guard/jwt-auth.guard";
+import { AuthGuard } from "@nestjs/passport";
+@Controller("auth")
+@ApiTags("Auth API")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('sign-up')
-  @ApiOperation({ summary: '회원가입' })
+  @Post("sign-up")
+  @ApiOperation({ summary: "회원가입" })
   @ApiCreatedResponse({ type: TokenDto })
   async signUp(
     @Body() payload: SignUpPayload,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<TokenDto> {
     const tokens = await this.authService.signUp(payload);
 
     // refresh Token은 쿠키로
-    res.cookie('refreshToken', tokens.refreshToken, {
+    res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: "strict",
       // 이후 실제 도메인으로 변경
-      domain: 'localhost',
+      domain: "localhost",
     });
 
     return TokenDto.from(tokens.accessToken);
   }
 
-  @Post('login')
+  @Post("login")
   @HttpCode(200)
-  @ApiOperation({ summary: '로그인' })
+  @ApiOperation({ summary: "로그인" })
   @ApiOkResponse({ type: TokenDto })
   async login(
     @Body() payload: LoginPayload,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<TokenDto> {
     const tokens = await this.authService.login(payload);
 
     // refresh Token은 쿠키로
-    res.cookie('refreshToken', tokens.refreshToken, {
+    res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: "strict",
       // 이후 실제 도메인으로 변경
-      domain: 'localhost',
+      domain: "localhost",
     });
 
     return TokenDto.from(tokens.accessToken);
   }
 
-  @Post('refresh')
+  @Post("refresh")
   @HttpCode(200)
-  @ApiOperation({ summary: '토큰 갱신' })
+  @ApiOperation({ summary: "토큰 갱신" })
   @ApiOkResponse({ type: TokenDto })
   async refresh(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<TokenDto> {
-    const tokens = await this.authService.refresh(req.cookies['refreshToken']);
+    const tokens = await this.authService.refresh(req.cookies["refreshToken"]);
 
     // refresh Token은 쿠키로
-    res.cookie('refreshToken', tokens.refreshToken, {
+    res.cookie("refreshToken", tokens.refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: "strict",
       // 이후 실제 도메인으로 변경
-      domain: 'localhost',
+      domain: "localhost",
     });
 
     return TokenDto.from(tokens.accessToken);
   }
 
-  @Put('password')
+  @Put("password")
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: '비밀번호 변경' })
+  @ApiOperation({ summary: "비밀번호 변경" })
   @ApiNoContentResponse()
   async changePassword(
     @Body() payload: ChangePasswordPayload,
-    @CurrentUser() user: UserBaseInfo,
+    @CurrentUser() user: UserBaseInfo
   ): Promise<void> {
     return this.authService.changePassword(payload, user);
+  }
+
+  // auth.controller.ts에 추가
+  @Get("google")
+  @ApiOperation({ summary: "구글 로그인" })
+  @UseGuards(AuthGuard("google"))
+  async googleAuth() {
+    // 구글 로그인 페이지로 리다이렉트
+  }
+
+  @Get("google/callback")
+  @ApiOperation({ summary: "구글 로그인 콜백" })
+  @UseGuards(AuthGuard("google"))
+  async googleAuthCallback(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const { tokens, isNewUser } = await this.authService.googleLogin(req.user);
+
+    res.cookie("refreshToken", tokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      domain: "localhost",
+    });
+
+    return {
+      ...TokenDto.from(tokens.accessToken),
+      isNewUser,
+    };
   }
 }

@@ -116,4 +116,38 @@ export class AuthService {
 
     return tokens;
   }
+
+  async googleLogin(
+    googleUser: any
+  ): Promise<{ tokens: Tokens; isNewUser: boolean }> {
+    const user = await this.authRepository.getUserByEmail(googleUser.email);
+
+    if (user) {
+      // 기존 사용자면 토큰 생성
+      const tokens = await this.generateTokens(user.id);
+      return { tokens, isNewUser: false };
+    }
+
+    const signUpData: SignUpData = {
+      email: googleUser.email,
+      password: await this.passwordService.getEncryptPassword(
+        Math.random().toString(36) // 임시 비밀번호
+      ),
+      name: googleUser.name,
+      imageUrl: googleUser.imageUrl,
+      // 나머지 필수 정보는 기본값으로
+      universityId: 1, // 기본값
+      major: "미입력",
+      alcoholLevel: 0,
+      madCampStatus: "InCamp",
+      mbtiId: 1,
+      classId: 1,
+      sex: "MALE",
+      birthday: new Date(),
+    };
+
+    const newUser = await this.authRepository.createUser(signUpData);
+    const tokens = await this.generateTokens(newUser.id);
+    return { tokens, isNewUser: true };
+  }
 }

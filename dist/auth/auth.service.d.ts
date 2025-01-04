@@ -16,4 +16,8 @@ export declare class AuthService {
     refresh(refreshToken: string): Promise<Tokens>;
     changePassword(payload: ChangePasswordPayload, user: UserBaseInfo): Promise<void>;
     private generateTokens;
+    googleLogin(googleUser: any): Promise<{
+        tokens: Tokens;
+        isNewUser: boolean;
+    }>;
 }

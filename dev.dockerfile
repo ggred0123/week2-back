@@ -25,7 +25,7 @@ RUN apk add --no-cache openssl
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package.json ./package.json
-COPY --from=builder /usr/src/app/.dev.env ./.dev.env
+COPY --from=builder /usr/src/app/.env ./.env
 
 EXPOSE 8080
 

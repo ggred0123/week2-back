@@ -22,48 +22,64 @@ const login_payload_1 = require("./payload/login.payload");
 const change_password_payload_1 = require("./payload/change-password.payload");
 const user_decorator_1 = require("./decorator/user.decorator");
 const jwt_auth_guard_1 = require("./guard/jwt-auth.guard");
+const passport_1 = require("@nestjs/passport");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
     async signUp(payload, res) {
         const tokens = await this.authService.signUp(payload);
-        res.cookie('refreshToken', tokens.refreshToken, {
+        res.cookie("refreshToken", tokens.refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
-            domain: 'localhost',
+            sameSite: "strict",
+            domain: "localhost",
         });
         return token_dto_1.TokenDto.from(tokens.accessToken);
     }
     async login(payload, res) {
         const tokens = await this.authService.login(payload);
-        res.cookie('refreshToken', tokens.refreshToken, {
+        res.cookie("refreshToken", tokens.refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
-            domain: 'localhost',
+            sameSite: "strict",
+            domain: "localhost",
         });
         return token_dto_1.TokenDto.from(tokens.accessToken);
     }
     async refresh(req, res) {
-        const tokens = await this.authService.refresh(req.cookies['refreshToken']);
-        res.cookie('refreshToken', tokens.refreshToken, {
+        const tokens = await this.authService.refresh(req.cookies["refreshToken"]);
+        res.cookie("refreshToken", tokens.refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
-            domain: 'localhost',
+            sameSite: "strict",
+            domain: "localhost",
         });
         return token_dto_1.TokenDto.from(tokens.accessToken);
     }
     async changePassword(payload, user) {
         return this.authService.changePassword(payload, user);
     }
+    async googleAuth() {
+    }
+    async googleAuthCallback(req, res) {
+        const { tokens, isNewUser } = await this.authService.googleLogin(req.user);
+        res.cookie("refreshToken", tokens.refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            domain: "localhost",
+        });
+        return {
+            ...token_dto_1.TokenDto.from(tokens.accessToken),
+            isNewUser,
+        };
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)('sign-up'),
-    (0, swagger_1.ApiOperation)({ summary: '회원가입' }),
+    (0, common_1.Post)("sign-up"),
+    (0, swagger_1.ApiOperation)({ summary: "회원가입" }),
     (0, swagger_1.ApiCreatedResponse)({ type: token_dto_1.TokenDto }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
@@ -72,9 +88,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signUp", null);
 __decorate([
-    (0, common_1.Post)('login'),
+    (0, common_1.Post)("login"),
     (0, common_1.HttpCode)(200),
-    (0, swagger_1.ApiOperation)({ summary: '로그인' }),
+    (0, swagger_1.ApiOperation)({ summary: "로그인" }),
     (0, swagger_1.ApiOkResponse)({ type: token_dto_1.TokenDto }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
@@ -83,9 +99,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Post)('refresh'),
+    (0, common_1.Post)("refresh"),
     (0, common_1.HttpCode)(200),
-    (0, swagger_1.ApiOperation)({ summary: '토큰 갱신' }),
+    (0, swagger_1.ApiOperation)({ summary: "토큰 갱신" }),
     (0, swagger_1.ApiOkResponse)({ type: token_dto_1.TokenDto }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
@@ -94,11 +110,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refresh", null);
 __decorate([
-    (0, common_1.Put)('password'),
+    (0, common_1.Put)("password"),
     (0, common_1.HttpCode)(204),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiOperation)({ summary: '비밀번호 변경' }),
+    (0, swagger_1.ApiOperation)({ summary: "비밀번호 변경" }),
     (0, swagger_1.ApiNoContentResponse)(),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, user_decorator_1.CurrentUser)()),
@@ -106,9 +122,27 @@ __decorate([
     __metadata("design:paramtypes", [change_password_payload_1.ChangePasswordPayload, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "changePassword", null);
+__decorate([
+    (0, common_1.Get)("google"),
+    (0, swagger_1.ApiOperation)({ summary: "구글 로그인" }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("google")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "googleAuth", null);
+__decorate([
+    (0, common_1.Get)("google/callback"),
+    (0, swagger_1.ApiOperation)({ summary: "구글 로그인 콜백" }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("google")),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "googleAuthCallback", null);
 exports.AuthController = AuthController = __decorate([
-    (0, common_1.Controller)('auth'),
-    (0, swagger_1.ApiTags)('Auth API'),
+    (0, common_1.Controller)("auth"),
+    (0, swagger_1.ApiTags)("Auth API"),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map
