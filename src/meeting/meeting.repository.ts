@@ -143,6 +143,9 @@ export class MeetingRepository {
     return this.prisma.meeting.findMany({
       where: {
         categoryId: query.categoryId,
+        startTime: {
+          gte: new Date(),
+        },
       },
       select: {
         id: true,
