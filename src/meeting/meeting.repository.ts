@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../common/services/prisma.service";
 import { CreateMeetingData } from "./type/create-meeting-data.type";
-import { Category, City } from "@prisma/client";
-import { MeetingDetailData } from "./type/meeting-detail-data.type";
+import { Category } from "@prisma/client";
 import { MeetingQuery } from "./query/meeting.query";
 import { MeetingData } from "./type/meeting-data.type";
 import { UpdateMeetingData } from "./type/update-meeting-data.type";
@@ -230,54 +229,6 @@ export class MeetingRepository {
         meetingId_userId: {
           meetingId,
           userId,
-        },
-      },
-    });
-  }
-
-  async findMeetingDetailById(id: number): Promise<MeetingDetailData | null> {
-    return this.prisma.meeting.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
-        hostId: true,
-        title: true,
-        description: true,
-        categoryId: true,
-        meetingCity: {
-          select: {
-            cityId: true,
-          },
-        },
-        startTime: true,
-        endTime: true,
-        maxPeople: true,
-        meetingJoin: {
-          where: {
-            user: {
-              deletedAt: null,
-            },
-          },
-          select: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
-        review: {
-          select: {
-            id: true,
-            userId: true,
-            meetingId: true,
-            score: true,
-            title: true,
-            description: true,
-          },
         },
       },
     });

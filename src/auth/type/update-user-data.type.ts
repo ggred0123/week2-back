@@ -5,6 +5,7 @@ export type UpdateUserData = {
   password?: string;
   name?: string;
   universityId?: number;
+  major?: string;
   birthday?: Date;
   classId?: number;
   mbtiId?: number;

@@ -40,7 +40,7 @@ model User {
   major        String
   alcoholLevel Int       @default(0)
   // preferredAlcohol는 UserPreferredAlcohol를 통해 다대다 관계로 저장됨
-  madCampStatus MadCampStatus @default(InCamp)
+  madCampStatus MadCampStatus 
   email        String    @unique
   password     String
   sex          Sex       @default(MALE)
@@ -218,6 +218,8 @@ model MeetingJoinUser {
   updatedAt DateTime @updatedAt @map("updated_at")
   meeting Meeting @relation(fields: [meetingId], references: [id])
   user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([meetingId, userId])
 
   @@map("meeting_join_user")
 }
