@@ -86,4 +86,20 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], CreateMeetingPayload.prototype, "maxPeople", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        description: "위치",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], CreateMeetingPayload.prototype, "location", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        description: "키워드",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], CreateMeetingPayload.prototype, "keyword", void 0);
 //# sourceMappingURL=create-meeting.payload.js.map

@@ -23,6 +23,8 @@ class MeetingDto {
             startTime: data.startTime,
             endTime: data.endTime,
             maxPeople: data.maxPeople,
+            location: data.location,
+            keyword: data.keyword,
         };
     }
     static fromArray(data) {
@@ -94,6 +96,20 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], MeetingDto.prototype, "maxPeople", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "위치",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], MeetingDto.prototype, "location", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "키워드",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], MeetingDto.prototype, "keyword", void 0);
 class MeetingListDto {
     static from(data) {
         return {

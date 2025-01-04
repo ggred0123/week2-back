@@ -17,10 +17,9 @@ class MeetingQuery {
 }
 exports.MeetingQuery = MeetingQuery;
 __decorate([
-    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsInt)(),
     (0, class_transformer_1.Type)(() => Number),
-    (0, swagger_1.ApiPropertyOptional)({
+    (0, swagger_1.ApiProperty)({
         description: "카테고리 ID",
         type: Number,
     }),

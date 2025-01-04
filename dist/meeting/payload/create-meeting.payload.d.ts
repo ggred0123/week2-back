@@ -7,4 +7,6 @@ export declare class CreateMeetingPayload {
     startTime: Date;
     endTime: Date;
     maxPeople: number;
+    location: string;
+    keyword: string;
 }

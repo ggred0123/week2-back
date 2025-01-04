@@ -50,18 +50,19 @@ model User {
   refreshToken String?   @map("refresh_token")
   birthday     DateTime
   createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   meeting Meeting[]
   meetingJoinUser MeetingJoinUser[]
   preferredAlcohol UserPreferredAlcohol[]
-  communityJoinUser CommunityJoinUser[]
   codingInfo UserCodingInfo[]
-
+  reply Reply[]
+  communityContent CommunityContent[]
+  callerUserMatching UserMatching[] @relation("CallerRelation")
+  calleeUserMatching UserMatching[] @relation("CalleeRelation")
+  
   university University @relation(fields: [universityId], references: [id])
   mbti Mbti @relation(fields: [mbtiId], references: [id])
-  matchingsAsUser1 UserMatching[] @relation("UserMatchingToUser1")
-  matchingsAsUser2 UserMatching[] @relation("UserMatchingToUser2")
+
   
 
 
@@ -75,7 +76,6 @@ model UserCodingInfo {
   codingFieldId Int @map("coding_field_id")
   codingLevel Int   
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
 
   codingLanguage CodingLanguage @relation(fields: [codingLanguageId], references: [id])
@@ -88,7 +88,6 @@ model CodingField {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   user UserCodingInfo[]
 
@@ -100,7 +99,6 @@ model CodingLanguage {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   user UserCodingInfo[]
 
@@ -112,7 +110,6 @@ model Mbti {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   user User[]
 
@@ -125,7 +122,6 @@ model UserPreferredAlcohol {
   userId    Int      @map("user_id")
   alcoholId Int      @map("alcohol_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id])
   alcohol Alcohol @relation(fields: [alcoholId], references: [id])
@@ -139,7 +135,6 @@ model Alcohol {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   user UserPreferredAlcohol[]
 
@@ -152,7 +147,6 @@ model University {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   user User[]
 
@@ -161,24 +155,33 @@ model University {
 
 model UserMatching {
   id        Int      @id @default(autoincrement())
-  userId1    Int      @map("user_id_1")
-  userId2    Int      @map("user_id_2")
+  callerUserId    Int      @map("caller_user_id")
+  calleeUserId    Int      @map("callee_user_id")
+  comment String
+  matchingCategoryId Int @map("matching_category_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
-  user1 User @relation("UserMatchingToUser1", fields: [userId1], references: [id])
-  user2 User @relation("UserMatchingToUser2", fields: [userId2], references: [id])
-
+  callerUser User @relation(fields: [callerUserId], references: [id], name: "CallerRelation")
+  calleeUser User @relation(fields: [calleeUserId], references: [id], name: "CalleeRelation")
+  matchingCategory MatchingCategory @relation(fields: [matchingCategoryId], references: [id])
   @@map("user_matching")
 }
 
+model MatchingCategory {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user UserMatching[]
+
+  @@map("matching_category")
+}
 
 
 model Category {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   
   meeting Meeting[]
@@ -191,13 +194,14 @@ model Meeting {
   hostId      Int      @map("host_id")
   categoryId  Int      @map("category_id")
   meetingImageUrl String? @map("meeting_image_url")
+  location String
   title       String
+  keyword     String
   description String
   maxPeople   Int      @map("max_people")
   startTime   DateTime @map("start_time")
   endTime     DateTime @map("end_time")
   createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
 
   meetingJoinUser MeetingJoinUser[]
 
@@ -226,12 +230,9 @@ model MeetingJoinUser {
 
 model Community {
   id        Int      @id @default(autoincrement())
-  name      String
-  description String
-  maxPeople Int @map("max_people")
+  title      String
+
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  communityJoinUser CommunityJoinUser[]
   communityContent CommunityContent[]
   @@map("community")
 }
@@ -239,29 +240,33 @@ model Community {
 model CommunityContent {
   id        Int      @id @default(autoincrement())
   communityId Int @map("community_id")
+  writedUserId Int @map("user_id")
+  title String
   content String
+  likeCount Int @default(0)
   contentImageUrl String? @map("content_image_url")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+
+  reply Reply[]
+  writedUser User @relation(fields: [writedUserId], references: [id])
 
   community Community @relation(fields: [communityId], references: [id])
-
   @@map("community_content")
 }
 
-model CommunityJoinUser {
-  id        Int      @id @default(autoincrement())
-  communityId Int @map("community_id")
-  userId    Int      @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
-  community Community @relation(fields: [communityId], references: [id])
+model Reply {
+  id        Int      @id @default(autoincrement())
+  communityContentId Int @map("community_content_id")
+  userId Int @map("user_id")
+  content String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  communityContent CommunityContent @relation(fields: [communityContentId], references: [id])
   user User @relation(fields: [userId], references: [id])
 
-  @@map("community_join_user")
+  @@map("reply")
 }
-
 
 
 

@@ -71,4 +71,18 @@ export class CreateMeetingPayload {
     type: Number,
   })
   maxPeople!: number;
+
+  @IsString()
+  @ApiProperty({
+    description: "위치",
+    type: String,
+  })
+  location!: string;
+
+  @IsString()
+  @ApiProperty({
+    description: "키워드",
+    type: String,
+  })
+  keyword!: string;
 }

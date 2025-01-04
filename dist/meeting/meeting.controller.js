@@ -62,7 +62,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MeetingController.prototype, "createMeeting", null);
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)(":categoryId"),
     (0, swagger_1.ApiOperation)({ summary: "모임 전체 또는 필터 조회" }),
     (0, swagger_1.ApiOkResponse)({ type: meeting_dto_1.MeetingListDto }),
     __param(0, (0, common_1.Query)()),

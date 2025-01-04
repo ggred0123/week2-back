@@ -17,6 +17,7 @@ const user_module_1 = require("../user/user.module");
 const auth_module_1 = require("../auth/auth.module");
 const meeting_module_1 = require("../meeting/meeting.module");
 const category_module_1 = require("../category/category.module");
+const community_module_1 = require("../community/community.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes("*");
@@ -29,9 +30,10 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             config_module_1.configModule,
             meeting_module_1.MeetingModule,
+            user_module_1.UserModule,
             category_module_1.CategoryModule,
             common_module_1.CommonModule,
-            user_module_1.UserModule,
+            community_module_1.CommunityModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -21,6 +21,8 @@ export class MeetingRepository {
         startTime: data.startTime,
         endTime: data.endTime,
         maxPeople: data.maxPeople,
+        location: data.location,
+        keyword: data.keyword,
       },
       select: {
         id: true,
@@ -39,6 +41,8 @@ export class MeetingRepository {
             },
           },
         },
+        location: true,
+        keyword: true,
         startTime: true,
         endTime: true,
         maxPeople: true,
@@ -62,6 +66,8 @@ export class MeetingRepository {
         startTime: data.startTime,
         endTime: data.endTime,
         maxPeople: data.maxPeople,
+        location: data.location,
+        keyword: data.keyword,
       },
       select: {
         id: true,
@@ -80,6 +86,8 @@ export class MeetingRepository {
             },
           },
         },
+        location: true,
+        keyword: true,
         startTime: true,
         endTime: true,
         maxPeople: true,
@@ -122,6 +130,8 @@ export class MeetingRepository {
         description: true,
         categoryId: true,
         meetingImageUrl: true,
+        location: true,
+        keyword: true,
         meetingJoinUser: {
           select: {
             user: {
@@ -143,6 +153,9 @@ export class MeetingRepository {
     return this.prisma.meeting.findMany({
       where: {
         categoryId: query.categoryId,
+        startTime: {
+          gte: new Date(),
+        },
       },
       select: {
         id: true,
@@ -164,6 +177,8 @@ export class MeetingRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
+        location: true,
+        keyword: true,
       },
     });
   }
@@ -197,6 +212,8 @@ export class MeetingRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
+        location: true,
+        keyword: true,
       },
     });
   }
