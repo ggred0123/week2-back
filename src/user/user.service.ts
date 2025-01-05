@@ -43,14 +43,6 @@ export class UserService {
       throw new ForbiddenException("타인의 계정은 수정할 수 없습니다.");
     }
 
-    if (data.email) {
-      const isEmailExist = await this.userRepository.isEmailExist(data.email);
-
-      if (isEmailExist) {
-        throw new ConflictException("이미 사용 중인 이메일입니다.");
-      }
-    }
-
     const updatedUser = await this.userRepository.updateUser(userId, data);
 
     return UserDto.from(updatedUser);

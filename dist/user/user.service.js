@@ -33,12 +33,6 @@ let UserService = class UserService {
         if (userId !== user.id) {
             throw new common_1.ForbiddenException("타인의 계정은 수정할 수 없습니다.");
         }
-        if (data.email) {
-            const isEmailExist = await this.userRepository.isEmailExist(data.email);
-            if (isEmailExist) {
-                throw new common_1.ConflictException("이미 사용 중인 이메일입니다.");
-            }
-        }
         const updatedUser = await this.userRepository.updateUser(userId, data);
         return user_dto_1.UserDto.from(updatedUser);
     }

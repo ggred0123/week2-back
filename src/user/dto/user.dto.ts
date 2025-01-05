@@ -53,12 +53,6 @@ export class UserDto {
   imageUrl?: string | null;
 
   @ApiProperty({
-    description: "유저 이메일",
-    type: String,
-  })
-  email!: string;
-
-  @ApiProperty({
     description: "이름",
     type: String,
   })
@@ -79,7 +73,6 @@ export class UserDto {
   static from(data: UserData): UserDto {
     return {
       id: data.id,
-      email: data.email,
       name: data.name,
       birthday: data.birthday,
       universityId: data.universityId,

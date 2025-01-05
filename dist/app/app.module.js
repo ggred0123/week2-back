@@ -18,6 +18,8 @@ const auth_module_1 = require("../auth/auth.module");
 const meeting_module_1 = require("../meeting/meeting.module");
 const category_module_1 = require("../category/category.module");
 const community_module_1 = require("../community/community.module");
+const extra_module_1 = require("../extra/extra.module");
+const aws_module_1 = require("../common/aws/aws.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes("*");
@@ -34,6 +36,8 @@ exports.AppModule = AppModule = __decorate([
             category_module_1.CategoryModule,
             common_module_1.CommonModule,
             community_module_1.CommunityModule,
+            extra_module_1.ExtraModule,
+            aws_module_1.AwsS3Module,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

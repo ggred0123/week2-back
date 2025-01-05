@@ -14,6 +14,6 @@ let AppController = class AppController {
 exports.AppController = AppController;
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
-    (0, swagger_1.ApiTags)("Eventory")
+    (0, swagger_1.ApiTags)("Week2")
 ], AppController);
 //# sourceMappingURL=app.controller.js.map

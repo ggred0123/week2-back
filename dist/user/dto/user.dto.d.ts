@@ -9,7 +9,6 @@ export declare class UserDto {
     mbtiId: number;
     classId: number;
     imageUrl?: string | null;
-    email: string;
     name: string;
     birthday: Date;
     alcoholIds: number[];

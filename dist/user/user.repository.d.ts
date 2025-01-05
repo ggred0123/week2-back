@@ -6,5 +6,4 @@ export declare class UserRepository {
     constructor(prisma: PrismaService);
     getUserById(userId: number): Promise<UserData | null>;
     updateUser(userId: number, data: UpdateUserData): Promise<UserData>;
-    isEmailExist(email: string): Promise<boolean>;
 }

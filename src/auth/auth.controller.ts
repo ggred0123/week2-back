@@ -21,7 +21,6 @@ import { AuthService } from "./auth.service";
 import { TokenDto } from "./dto/token.dto";
 import { SignUpPayload } from "./payload/sign-up.payload";
 import { Response, Request } from "express";
-import { LoginPayload } from "./payload/login.payload";
 import { ChangePasswordPayload } from "./payload/change-password.payload";
 import { CurrentUser } from "./decorator/user.decorator";
 import { UserBaseInfo } from "./type/user-base-info.type";
@@ -32,47 +31,21 @@ import { AuthGuard } from "@nestjs/passport";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post("sign-up")
-  @ApiOperation({ summary: "회원가입" })
-  @ApiCreatedResponse({ type: TokenDto })
-  async signUp(
+  @Put("complete-profile")
+  @UseGuards(JwtAuthGuard) // 구글 로그인에서 받은 토큰으로 인증
+  @ApiOperation({ summary: "구글 로그인 후 추가 정보 입력" })
+  async completeProfile(
     @Body() payload: SignUpPayload,
+    @CurrentUser() user: UserBaseInfo,
     @Res({ passthrough: true }) res: Response
-  ): Promise<TokenDto> {
-    const tokens = await this.authService.signUp(payload);
-
-    // refresh Token은 쿠키로
-    res.cookie("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      // 이후 실제 도메인으로 변경
-      domain: "localhost",
-    });
-
-    return TokenDto.from(tokens.accessToken);
-  }
-
-  @Post("login")
-  @HttpCode(200)
-  @ApiOperation({ summary: "로그인" })
-  @ApiOkResponse({ type: TokenDto })
-  async login(
-    @Body() payload: LoginPayload,
-    @Res({ passthrough: true }) res: Response
-  ): Promise<TokenDto> {
-    const tokens = await this.authService.login(payload);
-
-    // refresh Token은 쿠키로
-    res.cookie("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      // 이후 실제 도메인으로 변경
-      domain: "localhost",
-    });
-
-    return TokenDto.from(tokens.accessToken);
+  ) {
+    try {
+      await this.authService.updateUserProfile(user.id, payload);
+      return { message: "프로필 업데이트 완료" };
+    } catch (error) {
+      console.error("Error completing profile:", error);
+      throw error;
+    }
   }
 
   @Post("refresh")
@@ -97,19 +70,6 @@ export class AuthController {
     return TokenDto.from(tokens.accessToken);
   }
 
-  @Put("password")
-  @HttpCode(204)
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "비밀번호 변경" })
-  @ApiNoContentResponse()
-  async changePassword(
-    @Body() payload: ChangePasswordPayload,
-    @CurrentUser() user: UserBaseInfo
-  ): Promise<void> {
-    return this.authService.changePassword(payload, user);
-  }
-
   // auth.controller.ts에 추가
   @Get("google")
   @ApiOperation({ summary: "구글 로그인" })
@@ -121,22 +81,37 @@ export class AuthController {
   @Get("google/callback")
   @ApiOperation({ summary: "구글 로그인 콜백" })
   @UseGuards(AuthGuard("google"))
-  async googleAuthCallback(
-    @Req() req,
-    @Res({ passthrough: true }) res: Response
-  ) {
-    const { tokens, isNewUser } = await this.authService.googleLogin(req.user);
+  async googleAuthCallback(@Req() req, @Res() res: Response) {
+    try {
+      console.log("Google User Data:", req.user);
+      if (!req.user) {
+        throw new Error("Google OAuth 인증 실패: 사용자 데이터가 없습니다.");
+      }
 
-    res.cookie("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      domain: "localhost",
-    });
+      const { tokens, isNewUser } = await this.authService.googleLogin(
+        req.user
+      );
 
-    return {
-      ...TokenDto.from(tokens.accessToken),
-      isNewUser,
-    };
+      console.log("Generated Tokens:", tokens);
+      console.log("Is New User:", isNewUser);
+
+      // refreshToken을 쿠키에 설정
+      res.cookie("refreshToken", tokens.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        domain: "localhost",
+      });
+
+      // 프론트엔드 URL을 직접 지정
+      const frontendURL = "http://localhost:3000"; // 수정된 부분
+
+      return res.redirect(
+        `${frontendURL}/auth/google/callback?accessToken=${tokens.accessToken}&isNewUser=${isNewUser}`
+      );
+    } catch (error) {
+      console.error("Error in Google Auth Callback:", error);
+      return res.redirect("http://localhost:3000/error");
+    }
   }
 }

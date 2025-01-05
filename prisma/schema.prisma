@@ -32,6 +32,10 @@ enum PreferredAlcohol {
   SoftDrink
   None
 }
+enum RegistrationStatus {
+  TEMPORARY
+  COMPLETED
+}
 
 model User {
   id           Int       @id @default(autoincrement())
@@ -41,14 +45,14 @@ model User {
   alcoholLevel Int       @default(0)
   // preferredAlcohol는 UserPreferredAlcohol를 통해 다대다 관계로 저장됨
   madCampStatus MadCampStatus 
-  email        String    @unique
-  password     String
+  email        String    @unique @map("email")
   sex          Sex       @default(MALE)
   mbtiId       Int       @map("mbti_id")
   classId      Int       @map("class_id")
   imageUrl     String?   @map("image_url")
   refreshToken String?   @map("refresh_token")
   birthday     DateTime
+  registrationStatus RegistrationStatus @default(TEMPORARY)
   createdAt    DateTime  @default(now()) @map("created_at")
 
   meeting Meeting[]

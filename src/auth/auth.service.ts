@@ -22,54 +22,6 @@ export class AuthService {
     private readonly tokenService: TokenService
   ) {}
 
-  async signUp(payload: SignUpPayload): Promise<Tokens> {
-    const user = await this.authRepository.getUserByEmail(payload.email);
-    if (user) {
-      throw new ConflictException("이미 사용중인 이메일입니다.");
-    }
-
-    const hashedPassword = await this.passwordService.getEncryptPassword(
-      payload.password
-    );
-
-    const inputData: SignUpData = {
-      email: payload.email,
-      password: hashedPassword,
-      name: payload.name,
-      birthday: payload.birthday,
-      universityId: payload.universityId,
-      major: payload.major,
-      alcoholLevel: payload.alcoholLevel,
-      madCampStatus: payload.madCampStatus,
-      mbtiId: payload.mbtiId,
-      classId: payload.classId,
-      sex: payload.sex,
-      imageUrl: payload.imageUrl ?? null,
-    };
-
-    const createdUser = await this.authRepository.createUser(inputData);
-
-    return this.generateTokens(createdUser.id);
-  }
-
-  async login(payload: LoginPayload): Promise<Tokens> {
-    const user = await this.authRepository.getUserByEmail(payload.email);
-    if (!user) {
-      throw new NotFoundException("존재하지 않는 이메일입니다.");
-    }
-
-    const isPasswordMatch = await this.passwordService.validatePassword(
-      payload.password,
-      user.password
-    );
-
-    if (!isPasswordMatch) {
-      throw new ConflictException("비밀번호가 일치하지 않습니다.");
-    }
-
-    return this.generateTokens(user.id);
-  }
-
   async refresh(refreshToken: string): Promise<Tokens> {
     const data = this.tokenService.verifyRefreshToken(refreshToken);
 
@@ -85,27 +37,7 @@ export class AuthService {
     return this.generateTokens(user.id);
   }
 
-  async changePassword(
-    payload: ChangePasswordPayload,
-    user: UserBaseInfo
-  ): Promise<void> {
-    const isValid = await this.passwordService.validatePassword(
-      payload.currentPassword,
-      user.password
-    );
-
-    if (!isValid) {
-      throw new UnauthorizedException("현재 비밀번호가 일치하지 않습니다.");
-    }
-
-    const hashedPassword = await this.passwordService.getEncryptPassword(
-      payload.newPassword
-    );
-
-    await this.authRepository.updateUser(user.id, {
-      password: hashedPassword,
-    });
-  }
+ 
 
   private async generateTokens(userId: number): Promise<Tokens> {
     const tokens = this.tokenService.generateTokens({ userId });
@@ -120,34 +52,66 @@ export class AuthService {
   async googleLogin(
     googleUser: any
   ): Promise<{ tokens: Tokens; isNewUser: boolean }> {
-    const user = await this.authRepository.getUserByEmail(googleUser.email);
+    try {
+      if (!googleUser?.email) {
+        throw new Error("Invalid Google user data");
+      }
 
-    if (user) {
-      // 기존 사용자면 토큰 생성
-      const tokens = await this.generateTokens(user.id);
-      return { tokens, isNewUser: false };
+      const user = await this.authRepository.getUserByEmail(googleUser.email);
+
+      if (user) {
+        // 이미 회원가입이 완료된 유저인 경우
+        if (user.registrationStatus === "COMPLETED") {
+          const tokens = await this.generateTokens(user.id);
+          return { tokens, isNewUser: false };
+        }
+        // 임시 계정인 경우
+        const tokens = await this.generateTokens(user.id);
+        return { tokens, isNewUser: true };
+      }
+
+      const signUpData: SignUpData = {
+        email: googleUser.email,
+        name: googleUser.name || "Unknown",
+        imageUrl: googleUser.imageUrl || null,
+        universityId: 1,
+        major: "미입력",
+        alcoholLevel: 0,
+        madCampStatus: "InCamp",
+        mbtiId: 1,
+        classId: 1,
+        sex: "MALE",
+        birthday: new Date(),
+        registrationStatus: "TEMPORARY",
+      };
+
+      const newUser = await this.authRepository.createUser(signUpData);
+      const tokens = await this.generateTokens(newUser.id);
+
+      return { tokens, isNewUser: true };
+    } catch (error: unknown) {
+      console.error("Google login error:", error);
+      if (error instanceof Error) {
+        throw new Error("Google login failed: " + error.message);
+      }
+      throw new Error("Google login failed: Unknown error");
+    }
+  }
+
+  async updateUserProfile(
+    userId: number,
+    payload: SignUpPayload
+  ): Promise<void> {
+    const user = await this.authRepository.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException("사용자를 찾을 수 없습니다.");
     }
 
-    const signUpData: SignUpData = {
-      email: googleUser.email,
-      password: await this.passwordService.getEncryptPassword(
-        Math.random().toString(36) // 임시 비밀번호
-      ),
-      name: googleUser.name,
-      imageUrl: googleUser.imageUrl,
-      // 나머지 필수 정보는 기본값으로
-      universityId: 1, // 기본값
-      major: "미입력",
-      alcoholLevel: 0,
-      madCampStatus: "InCamp",
-      mbtiId: 1,
-      classId: 1,
-      sex: "MALE",
-      birthday: new Date(),
-    };
-
-    const newUser = await this.authRepository.createUser(signUpData);
-    const tokens = await this.generateTokens(newUser.id);
-    return { tokens, isNewUser: true };
+    await this.authRepository.updateUser(userId, {
+      ...payload,
+      registrationStatus: "COMPLETED",
+    });
   }
+
+  // 새로운 메소드: 상세 정보 입력 완료 처리
 }

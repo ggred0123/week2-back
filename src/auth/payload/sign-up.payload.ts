@@ -11,20 +11,6 @@ import { Type } from "class-transformer";
 import { MadCampStatus, Sex } from "src/user/enum/user.enum";
 
 export class SignUpPayload {
-  @IsEmail()
-  @ApiProperty({
-    description: "이메일",
-    type: String,
-  })
-  email!: string;
-
-  @IsString()
-  @ApiProperty({
-    description: "비밀번호",
-    type: String,
-  })
-  password!: string;
-
   @IsString()
   @ApiProperty({
     description: "이름",

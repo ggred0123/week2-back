@@ -1,3 +1,4 @@
+import { RegistrationStatus } from "@prisma/client";
 import { MadCampStatus, Sex } from "src/user/enum/user.enum";
 export type UpdateUserData = {
     email?: string;
@@ -14,4 +15,5 @@ export type UpdateUserData = {
     alcoholLevel?: number;
     imageUrl?: string | null;
     refreshToken?: string | null;
+    registrationStatus?: RegistrationStatus;
 };

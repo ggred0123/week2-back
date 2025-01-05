@@ -6,15 +6,14 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const exception_filter_1 = require("./common/filter/exception.filter");
 const path_1 = require("path");
-const cookieParser = require("cookie-parser");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: "*",
+        origin: ["http://localhost:3000", "http://localhost:5173"],
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"],
     });
-    app.use(cookieParser());
     app.useGlobalPipes(new common_1.ValidationPipe({
         transform: true,
         whitelist: true,

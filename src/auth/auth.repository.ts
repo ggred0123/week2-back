@@ -13,7 +13,6 @@ export class AuthRepository {
     return this.prisma.user.create({
       data: {
         email: data.email,
-        password: data.password,
         name: data.name,
         birthday: data.birthday,
         universityId: data.universityId,
@@ -24,12 +23,12 @@ export class AuthRepository {
         classId: data.classId,
         sex: data.sex,
         imageUrl: data.imageUrl,
+        registrationStatus: data.registrationStatus,
       },
       select: {
         id: true,
-        email: true,
-        password: true,
         name: true,
+        email: true,
         birthday: true,
         universityId: true,
         major: true,
@@ -40,6 +39,7 @@ export class AuthRepository {
         sex: true,
         imageUrl: true,
         refreshToken: true,
+        registrationStatus: true,
       },
     });
   }
@@ -50,8 +50,6 @@ export class AuthRepository {
         id: id,
       },
       data: {
-        email: data.email,
-        password: data.password,
         name: data.name,
         birthday: data.birthday,
         universityId: data.universityId,
@@ -63,11 +61,11 @@ export class AuthRepository {
         sex: data.sex,
         imageUrl: data.imageUrl,
         refreshToken: data.refreshToken,
+        registrationStatus: data.registrationStatus,
       },
       select: {
         id: true,
-        email: true,
-        password: true,
+
         name: true,
         birthday: true,
         universityId: true,
@@ -79,6 +77,7 @@ export class AuthRepository {
         sex: true,
         imageUrl: true,
         refreshToken: true,
+        registrationStatus: true,
       },
     });
   }
@@ -90,8 +89,7 @@ export class AuthRepository {
       },
       select: {
         id: true,
-        email: true,
-        password: true,
+
         name: true,
         birthday: true,
         universityId: true,
@@ -103,6 +101,7 @@ export class AuthRepository {
         sex: true,
         imageUrl: true,
         refreshToken: true,
+        registrationStatus: true,
       },
     });
   }
@@ -115,7 +114,6 @@ export class AuthRepository {
       select: {
         id: true,
         email: true,
-        password: true,
         name: true,
         birthday: true,
         universityId: true,
@@ -127,6 +125,7 @@ export class AuthRepository {
         sex: true,
         imageUrl: true,
         refreshToken: true,
+        registrationStatus: true,
       },
     });
   }

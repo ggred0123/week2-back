@@ -11,7 +11,6 @@ export type UserData = {
   mbtiId: number;
   classId: number;
   imageUrl: string | null;
-  email: string;
   name: string;
   birthday: Date;
 };

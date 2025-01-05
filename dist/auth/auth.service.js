@@ -20,40 +20,6 @@ let AuthService = class AuthService {
         this.passwordService = passwordService;
         this.tokenService = tokenService;
     }
-    async signUp(payload) {
-        const user = await this.authRepository.getUserByEmail(payload.email);
-        if (user) {
-            throw new common_1.ConflictException("이미 사용중인 이메일입니다.");
-        }
-        const hashedPassword = await this.passwordService.getEncryptPassword(payload.password);
-        const inputData = {
-            email: payload.email,
-            password: hashedPassword,
-            name: payload.name,
-            birthday: payload.birthday,
-            universityId: payload.universityId,
-            major: payload.major,
-            alcoholLevel: payload.alcoholLevel,
-            madCampStatus: payload.madCampStatus,
-            mbtiId: payload.mbtiId,
-            classId: payload.classId,
-            sex: payload.sex,
-            imageUrl: payload.imageUrl ?? null,
-        };
-        const createdUser = await this.authRepository.createUser(inputData);
-        return this.generateTokens(createdUser.id);
-    }
-    async login(payload) {
-        const user = await this.authRepository.getUserByEmail(payload.email);
-        if (!user) {
-            throw new common_1.NotFoundException("존재하지 않는 이메일입니다.");
-        }
-        const isPasswordMatch = await this.passwordService.validatePassword(payload.password, user.password);
-        if (!isPasswordMatch) {
-            throw new common_1.ConflictException("비밀번호가 일치하지 않습니다.");
-        }
-        return this.generateTokens(user.id);
-    }
     async refresh(refreshToken) {
         const data = this.tokenService.verifyRefreshToken(refreshToken);
         const user = await this.authRepository.getUserById(data.userId);
@@ -65,16 +31,6 @@ let AuthService = class AuthService {
         }
         return this.generateTokens(user.id);
     }
-    async changePassword(payload, user) {
-        const isValid = await this.passwordService.validatePassword(payload.currentPassword, user.password);
-        if (!isValid) {
-            throw new common_1.UnauthorizedException("현재 비밀번호가 일치하지 않습니다.");
-        }
-        const hashedPassword = await this.passwordService.getEncryptPassword(payload.newPassword);
-        await this.authRepository.updateUser(user.id, {
-            password: hashedPassword,
-        });
-    }
     async generateTokens(userId) {
         const tokens = this.tokenService.generateTokens({ userId });
         await this.authRepository.updateUser(userId, {
@@ -83,28 +39,54 @@ let AuthService = class AuthService {
         return tokens;
     }
     async googleLogin(googleUser) {
-        const user = await this.authRepository.getUserByEmail(googleUser.email);
-        if (user) {
-            const tokens = await this.generateTokens(user.id);
-            return { tokens, isNewUser: false };
+        try {
+            if (!googleUser?.email) {
+                throw new Error("Invalid Google user data");
+            }
+            const user = await this.authRepository.getUserByEmail(googleUser.email);
+            if (user) {
+                if (user.registrationStatus === "COMPLETED") {
+                    const tokens = await this.generateTokens(user.id);
+                    return { tokens, isNewUser: false };
+                }
+                const tokens = await this.generateTokens(user.id);
+                return { tokens, isNewUser: true };
+            }
+            const signUpData = {
+                email: googleUser.email,
+                name: googleUser.name || "Unknown",
+                imageUrl: googleUser.imageUrl || null,
+                universityId: 1,
+                major: "미입력",
+                alcoholLevel: 0,
+                madCampStatus: "InCamp",
+                mbtiId: 1,
+                classId: 1,
+                sex: "MALE",
+                birthday: new Date(),
+                registrationStatus: "TEMPORARY",
+            };
+            const newUser = await this.authRepository.createUser(signUpData);
+            const tokens = await this.generateTokens(newUser.id);
+            return { tokens, isNewUser: true };
         }
-        const signUpData = {
-            email: googleUser.email,
-            password: await this.passwordService.getEncryptPassword(Math.random().toString(36)),
-            name: googleUser.name,
-            imageUrl: googleUser.imageUrl,
-            universityId: 1,
-            major: "미입력",
-            alcoholLevel: 0,
-            madCampStatus: "InCamp",
-            mbtiId: 1,
-            classId: 1,
-            sex: "MALE",
-            birthday: new Date(),
-        };
-        const newUser = await this.authRepository.createUser(signUpData);
-        const tokens = await this.generateTokens(newUser.id);
-        return { tokens, isNewUser: true };
+        catch (error) {
+            console.error("Google login error:", error);
+            if (error instanceof Error) {
+                throw new Error("Google login failed: " + error.message);
+            }
+            throw new Error("Google login failed: Unknown error");
+        }
+    }
+    async updateUserProfile(userId, payload) {
+        const user = await this.authRepository.getUserById(userId);
+        if (!user) {
+            throw new common_1.NotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        await this.authRepository.updateUser(userId, {
+            ...payload,
+            registrationStatus: "COMPLETED",
+        });
     }
 };
 exports.AuthService = AuthService;

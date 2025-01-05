@@ -1,4 +1,4 @@
-import { MadCampStatus, Sex } from "@prisma/client";
+import { MadCampStatus, Sex, RegistrationStatus } from "@prisma/client";
 
 export type SignUpData = {
   universityId: number;
@@ -6,12 +6,11 @@ export type SignUpData = {
   major: string;
   alcoholLevel: number;
   madCampStatus: MadCampStatus;
-  email: string;
-  password: string;
   mbtiId: number;
   classId: number;
   sex: Sex;
   birthday: Date;
-
+  registrationStatus: RegistrationStatus;
   imageUrl: string | null;
+  email: string;
 };

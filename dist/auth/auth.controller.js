@@ -18,8 +18,6 @@ const swagger_1 = require("@nestjs/swagger");
 const auth_service_1 = require("./auth.service");
 const token_dto_1 = require("./dto/token.dto");
 const sign_up_payload_1 = require("./payload/sign-up.payload");
-const login_payload_1 = require("./payload/login.payload");
-const change_password_payload_1 = require("./payload/change-password.payload");
 const user_decorator_1 = require("./decorator/user.decorator");
 const jwt_auth_guard_1 = require("./guard/jwt-auth.guard");
 const passport_1 = require("@nestjs/passport");
@@ -27,25 +25,15 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async signUp(payload, res) {
-        const tokens = await this.authService.signUp(payload);
-        res.cookie("refreshToken", tokens.refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            domain: "localhost",
-        });
-        return token_dto_1.TokenDto.from(tokens.accessToken);
-    }
-    async login(payload, res) {
-        const tokens = await this.authService.login(payload);
-        res.cookie("refreshToken", tokens.refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            domain: "localhost",
-        });
-        return token_dto_1.TokenDto.from(tokens.accessToken);
+    async completeProfile(payload, user, res) {
+        try {
+            await this.authService.updateUserProfile(user.id, payload);
+            return { message: "프로필 업데이트 완료" };
+        }
+        catch (error) {
+            console.error("Error completing profile:", error);
+            throw error;
+        }
     }
     async refresh(req, res) {
         const tokens = await this.authService.refresh(req.cookies["refreshToken"]);
@@ -57,47 +45,44 @@ let AuthController = class AuthController {
         });
         return token_dto_1.TokenDto.from(tokens.accessToken);
     }
-    async changePassword(payload, user) {
-        return this.authService.changePassword(payload, user);
-    }
     async googleAuth() {
     }
     async googleAuthCallback(req, res) {
-        const { tokens, isNewUser } = await this.authService.googleLogin(req.user);
-        res.cookie("refreshToken", tokens.refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            domain: "localhost",
-        });
-        return {
-            ...token_dto_1.TokenDto.from(tokens.accessToken),
-            isNewUser,
-        };
+        try {
+            console.log("Google User Data:", req.user);
+            if (!req.user) {
+                throw new Error("Google OAuth 인증 실패: 사용자 데이터가 없습니다.");
+            }
+            const { tokens, isNewUser } = await this.authService.googleLogin(req.user);
+            console.log("Generated Tokens:", tokens);
+            console.log("Is New User:", isNewUser);
+            res.cookie("refreshToken", tokens.refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "strict",
+                domain: "localhost",
+            });
+            const frontendURL = "http://localhost:3000";
+            return res.redirect(`${frontendURL}/auth/google/callback?accessToken=${tokens.accessToken}&isNewUser=${isNewUser}`);
+        }
+        catch (error) {
+            console.error("Error in Google Auth Callback:", error);
+            return res.redirect("http://localhost:3000/error");
+        }
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)("sign-up"),
-    (0, swagger_1.ApiOperation)({ summary: "회원가입" }),
-    (0, swagger_1.ApiCreatedResponse)({ type: token_dto_1.TokenDto }),
+    (0, common_1.Put)("complete-profile"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiOperation)({ summary: "구글 로그인 후 추가 정보 입력" }),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(1, (0, user_decorator_1.CurrentUser)()),
+    __param(2, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [sign_up_payload_1.SignUpPayload, Object]),
+    __metadata("design:paramtypes", [sign_up_payload_1.SignUpPayload, Object, Object]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "signUp", null);
-__decorate([
-    (0, common_1.Post)("login"),
-    (0, common_1.HttpCode)(200),
-    (0, swagger_1.ApiOperation)({ summary: "로그인" }),
-    (0, swagger_1.ApiOkResponse)({ type: token_dto_1.TokenDto }),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_payload_1.LoginPayload, Object]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "login", null);
+], AuthController.prototype, "completeProfile", null);
 __decorate([
     (0, common_1.Post)("refresh"),
     (0, common_1.HttpCode)(200),
@@ -109,19 +94,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refresh", null);
-__decorate([
-    (0, common_1.Put)("password"),
-    (0, common_1.HttpCode)(204),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiOperation)({ summary: "비밀번호 변경" }),
-    (0, swagger_1.ApiNoContentResponse)(),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, user_decorator_1.CurrentUser)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [change_password_payload_1.ChangePasswordPayload, Object]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "changePassword", null);
 __decorate([
     (0, common_1.Get)("google"),
     (0, swagger_1.ApiOperation)({ summary: "구글 로그인" }),
@@ -135,7 +107,7 @@ __decorate([
     (0, swagger_1.ApiOperation)({ summary: "구글 로그인 콜백" }),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)("google")),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)

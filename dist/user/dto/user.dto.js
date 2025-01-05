@@ -16,7 +16,6 @@ class UserDto {
     static from(data) {
         return {
             id: data.id,
-            email: data.email,
             name: data.name,
             birthday: data.birthday,
             universityId: data.universityId,
@@ -91,13 +90,6 @@ __decorate([
     }),
     __metadata("design:type", Object)
 ], UserDto.prototype, "imageUrl", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        description: "유저 이메일",
-        type: String,
-    }),
-    __metadata("design:type", String)
-], UserDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         description: "이름",

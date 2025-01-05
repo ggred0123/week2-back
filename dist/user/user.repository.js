@@ -37,7 +37,6 @@ let UserRepository = class UserRepository {
             },
             data: {
                 name: data.name,
-                email: data.email,
                 birthday: data.birthday,
                 sex: data.sex,
                 mbtiId: data.mbtiId,
@@ -69,19 +68,10 @@ let UserRepository = class UserRepository {
                 mbtiId: true,
                 classId: true,
                 imageUrl: true,
-                email: true,
                 name: true,
                 birthday: true,
             },
         });
-    }
-    async isEmailExist(email) {
-        const user = await this.prisma.user.findFirst({
-            where: {
-                email,
-            },
-        });
-        return !!user;
     }
 };
 exports.UserRepository = UserRepository;

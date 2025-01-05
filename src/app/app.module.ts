@@ -9,6 +9,8 @@ import { AuthModule } from "../auth/auth.module";
 import { MeetingModule } from "../meeting/meeting.module";
 import { CategoryModule } from "../category/category.module";
 import { CommunityModule } from "src/community/community.module";
+import { ExtraModule } from "src/extra/extra.module";
+import { AwsS3Module } from "src/common/aws/aws.module";
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { CommunityModule } from "src/community/community.module";
     CategoryModule,
     CommonModule,
     CommunityModule,
+    ExtraModule,
+    AwsS3Module,
   ],
   controllers: [AppController],
   providers: [AppService],

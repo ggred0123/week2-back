@@ -1,10 +1,9 @@
 import { MadCampStatus } from "@prisma/client";
 import { Sex } from "@prisma/client";
-
+import { RegistrationStatus } from "@prisma/client";
 export type UserBaseInfo = {
   id: number;
-  email: string;
-  password: string;
+
   name: string;
   birthday: Date;
   universityId: number;
@@ -16,4 +15,5 @@ export type UserBaseInfo = {
   sex: Sex;
   imageUrl: string | null;
   refreshToken: string | null;
+  registrationStatus: RegistrationStatus;
 };
