@@ -18,4 +18,7 @@ export type UserBaseInfo = {
   registrationStatus: RegistrationStatus;
   preferredAlcoholId: number;
   leadershipLevel: number;
+  programmingLevel: number;
+  programmingLanguage: string;
+  programmingField: string;
 };

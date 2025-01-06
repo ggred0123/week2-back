@@ -33,6 +33,9 @@ let AuthRepository = class AuthRepository {
                 registrationStatus: data.registrationStatus,
                 preferredAlcoholId: data.preferredAlcoholId,
                 leadershipLevel: data.leadershipLevel,
+                programmingField: data.programmingField,
+                programmingLanguage: data.programmingLanguage,
+                programmingLevel: data.programmingLevel,
             },
             select: {
                 id: true,
@@ -51,6 +54,9 @@ let AuthRepository = class AuthRepository {
                 registrationStatus: true,
                 preferredAlcoholId: true,
                 leadershipLevel: true,
+                programmingField: true,
+                programmingLanguage: true,
+                programmingLevel: true,
             },
         });
     }
@@ -74,6 +80,9 @@ let AuthRepository = class AuthRepository {
                 registrationStatus: data.registrationStatus,
                 preferredAlcoholId: data.preferredAlcoholId,
                 leadershipLevel: data.leadershipLevel,
+                programmingField: data.programmingField,
+                programmingLanguage: data.programmingLanguage,
+                programmingLevel: data.programmingLevel,
             },
             select: {
                 id: true,
@@ -92,6 +101,9 @@ let AuthRepository = class AuthRepository {
                 registrationStatus: true,
                 preferredAlcoholId: true,
                 leadershipLevel: true,
+                programmingField: true,
+                programmingLanguage: true,
+                programmingLevel: true,
             },
         });
     }
@@ -117,6 +129,9 @@ let AuthRepository = class AuthRepository {
                 registrationStatus: true,
                 preferredAlcoholId: true,
                 leadershipLevel: true,
+                programmingField: true,
+                programmingLanguage: true,
+                programmingLevel: true,
             },
         });
     }
@@ -142,6 +157,9 @@ let AuthRepository = class AuthRepository {
                 registrationStatus: true,
                 preferredAlcoholId: true,
                 leadershipLevel: true,
+                programmingField: true,
+                programmingLanguage: true,
+                programmingLevel: true,
             },
         });
     }

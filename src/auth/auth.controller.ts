@@ -135,7 +135,7 @@ export class AuthController {
       );
     } catch (error) {
       console.error("Error in Google Auth Callback:", error);
-      return res.redirect("http://localhost:3000/error");
+      return res.redirect("http://localhost:3000/");
     }
   }
 }

@@ -18,4 +18,7 @@ export type UpdateUserData = {
   registrationStatus?: RegistrationStatus;
   preferredAlcoholId?: number;
   leadershipLevel?: number;
+  programmingField?: string;
+  programmingLanguage?: string;
+  programmingLevel?: number;
 };

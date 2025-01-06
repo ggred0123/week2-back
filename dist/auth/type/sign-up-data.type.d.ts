@@ -14,4 +14,7 @@ export type SignUpData = {
     email: string;
     preferredAlcoholId: number;
     leadershipLevel: number;
+    programmingField: string;
+    programmingLanguage: string;
+    programmingLevel: number;
 };

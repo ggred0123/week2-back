@@ -26,6 +26,9 @@ export class AuthRepository {
         registrationStatus: data.registrationStatus,
         preferredAlcoholId: data.preferredAlcoholId,
         leadershipLevel: data.leadershipLevel,
+        programmingField: data.programmingField,
+        programmingLanguage: data.programmingLanguage,
+        programmingLevel: data.programmingLevel,
       },
       select: {
         id: true,
@@ -44,6 +47,9 @@ export class AuthRepository {
         registrationStatus: true,
         preferredAlcoholId: true,
         leadershipLevel: true,
+        programmingField: true,
+        programmingLanguage: true,
+        programmingLevel: true,
       },
     });
   }
@@ -68,6 +74,9 @@ export class AuthRepository {
         registrationStatus: data.registrationStatus,
         preferredAlcoholId: data.preferredAlcoholId,
         leadershipLevel: data.leadershipLevel,
+        programmingField: data.programmingField,
+        programmingLanguage: data.programmingLanguage,
+        programmingLevel: data.programmingLevel,
       },
       select: {
         id: true,
@@ -86,6 +95,9 @@ export class AuthRepository {
         registrationStatus: true,
         preferredAlcoholId: true,
         leadershipLevel: true,
+        programmingField: true,
+        programmingLanguage: true,
+        programmingLevel: true,
       },
     });
   }
@@ -112,6 +124,9 @@ export class AuthRepository {
         registrationStatus: true,
         preferredAlcoholId: true,
         leadershipLevel: true,
+        programmingField: true,
+        programmingLanguage: true,
+        programmingLevel: true,
       },
     });
   }
@@ -138,6 +153,9 @@ export class AuthRepository {
         registrationStatus: true,
         preferredAlcoholId: true,
         leadershipLevel: true,
+        programmingField: true,
+        programmingLanguage: true,
+        programmingLevel: true,
       },
     });
   }

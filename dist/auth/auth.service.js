@@ -74,6 +74,9 @@ let AuthService = class AuthService {
                 registrationStatus: "TEMPORARY",
                 preferredAlcoholId: 1,
                 leadershipLevel: 1,
+                programmingField: "미입력",
+                programmingLanguage: "미입력",
+                programmingLevel: 1,
             };
             const newUser = await this.authRepository.createUser(signUpData);
             const tokens = await this.generateTokens(newUser.id);
