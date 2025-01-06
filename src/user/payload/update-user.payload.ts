@@ -95,6 +95,31 @@ export class UpdateUserPayload {
   @IsInt()
   @IsPositive()
   @ApiPropertyOptional({
+    description: "코딩 레벨",
+    type: Number,
+  })
+  programmingLevel?: number | null
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({
+    description: "코딩 분야",
+    type: String,
+  })
+  programmingField?: string | null;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({
+    description: "코딩 언어",
+    type: String,
+  })
+  programmingLanguage?: string | null;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  @ApiPropertyOptional({
     description: "선호 알콜 ID",
     type: Number,
   })
@@ -116,4 +141,6 @@ export class UpdateUserPayload {
     enum: MadCampStatus,
   })
   madCampStatus?: MadCampStatus | null;
+
+  
 }

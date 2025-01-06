@@ -14,5 +14,8 @@ export type SignUpData = {
   imageUrl: string | null;
   email: string;
   preferredAlcoholId: number;
+  programmingLevel: number;
+  programmingField: string;
+  programmingLanguage: string; 
   leadershipLevel: number;
 };

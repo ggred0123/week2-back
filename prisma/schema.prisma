@@ -51,9 +51,12 @@ model User {
   imageUrl     String?   @map("image_url")
   preferredAlcoholId Int @map("preferred_alcohol_id") @default(1)
   leadershipLevel Int @default(0)
-  refreshToken String?   @map("refresh_token")
+  refreshToken String?  @map("refresh_token")
   birthday     DateTime
   registrationStatus RegistrationStatus @default(TEMPORARY)
+  programmingLevel Int @default(0)
+  programmingField String @map("programming_field")
+  programmingLanguage String @map("programming_language")
   createdAt    DateTime  @default(now()) @map("created_at")
 
   meeting Meeting[]
@@ -67,49 +70,9 @@ model User {
   university University @relation(fields: [universityId], references: [id])
   mbti Mbti @relation(fields: [mbtiId], references: [id])
 
-
-  
-
-
   @@map("user")
 }
 
-model UserCodingInfo {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  codingLanguageId Int @map("coding_language_id")
-  codingFieldId Int @map("coding_field_id")
-  codingLevel Int   
-  createdAt DateTime @default(now()) @map("created_at")
-
-
-  codingLanguage CodingLanguage @relation(fields: [codingLanguageId], references: [id])
-  user User @relation(fields: [userId], references: [id])
-  codingField CodingField @relation(fields: [codingFieldId], references: [id])
-  @@map("user_coding")
-}
-
-model CodingField {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user UserCodingInfo[]
-
-
-  @@map("coding_field")
-}
-
-model CodingLanguage {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user UserCodingInfo[]
-
-
-  @@map("coding_language")
-}
 
 model Mbti {
   id        Int      @id @default(autoincrement())
