@@ -87,8 +87,6 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      // 이후 실제 도메인으로 변경
-      domain: "localhost",
     });
 
     return TokenDto.from(tokens.accessToken);
