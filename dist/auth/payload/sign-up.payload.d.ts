@@ -22,4 +22,7 @@ export declare class SignUpPayload {
     classId: number;
     sex: Sex;
     imageUrl?: string | null;
+    programmingLevel: number;
+    programmingField: string;
+    programmingLanguage: string;
 }

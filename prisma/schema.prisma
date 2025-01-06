@@ -42,26 +42,25 @@ model User {
   universityId Int       @map("university_id")
   name         String    
   major        String
-  alcoholLevel Int       @default(0)
-  madCampStatus MadCampStatus 
+  alcoholLevel Int       @map("alcohol_level") @default(0)
+  madCampStatus MadCampStatus @map("mad_camp_status") @default(InCamp) 
   email        String    @unique @map("email")
   sex          Sex       @default(MALE)
   mbtiId       Int       @map("mbti_id")
   classId      Int       @map("class_id")
   imageUrl     String?   @map("image_url")
   preferredAlcoholId Int @map("preferred_alcohol_id") @default(1)
-  leadershipLevel Int @default(0)
+  leadershipLevel Int    @map("leadership_level") @default(0) 
   refreshToken String?  @map("refresh_token")
   birthday     DateTime
-  registrationStatus RegistrationStatus @default(TEMPORARY)
-  programmingLevel Int @default(0)
+  registrationStatus RegistrationStatus @map("registration_status") @default(TEMPORARY) 
+  programmingLevel Int @map("programming_level") @default(0) 
   programmingField String @map("programming_field")
   programmingLanguage String @map("programming_language")
   createdAt    DateTime  @default(now()) @map("created_at")
 
   meeting Meeting[]
   meetingJoinUser MeetingJoinUser[]
-  codingInfo UserCodingInfo[]
   reply Reply[]
   communityContent CommunityContent[]
   callerUserMatching UserMatching[] @relation("CallerRelation")

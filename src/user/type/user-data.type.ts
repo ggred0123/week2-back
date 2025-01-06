@@ -1,4 +1,5 @@
 import { MadCampStatus, Sex } from "../enum/user.enum";
+
 export type UserData = {
   id: number;
   universityId: number;
@@ -11,7 +12,7 @@ export type UserData = {
   imageUrl: string | null;
   programmingLevel: number;
   programmingField: string;
-  programmingLanguage: string; 
+  programmingLanguage: string;
   name: string;
   birthday: Date;
   leadershipLevel: number;

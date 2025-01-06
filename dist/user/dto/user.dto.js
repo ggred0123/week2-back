@@ -25,6 +25,9 @@ class UserDto {
             mbtiId: data.mbtiId,
             classId: data.classId,
             imageUrl: data.imageUrl,
+            programmingLevel: data.programmingLevel,
+            programmingField: data.programmingField,
+            programmingLanguage: data.programmingLanguage,
             preferredAlcoholId: data.preferredAlcoholId,
             leadershipLevel: data.leadershipLevel,
         };
@@ -119,6 +122,27 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], UserDto.prototype, "preferredAlcoholId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "코딩 레벨",
+        type: Number,
+    }),
+    __metadata("design:type", Number)
+], UserDto.prototype, "programmingLevel", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "코딩 분야",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], UserDto.prototype, "programmingField", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "코딩 언어",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], UserDto.prototype, "programmingLanguage", void 0);
 class UserListDto {
     static from(data) {
         return {

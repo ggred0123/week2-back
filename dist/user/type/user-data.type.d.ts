@@ -9,6 +9,9 @@ export type UserData = {
     mbtiId: number;
     classId: number;
     imageUrl: string | null;
+    programmingLevel: number;
+    programmingField: string;
+    programmingLanguage: string;
     name: string;
     birthday: Date;
     leadershipLevel: number;

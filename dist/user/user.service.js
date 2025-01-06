@@ -70,6 +70,15 @@ let UserService = class UserService {
         if (payload.leadershipLevel === null) {
             throw new common_1.BadRequestException("리더십 레벨은 null이 될 수 없습니다.");
         }
+        if (payload.programmingLevel === null) {
+            throw new common_1.BadRequestException("코딩 레벨은 null이 될 수 없습니다.");
+        }
+        if (payload.programmingField === null) {
+            throw new common_1.BadRequestException("코딩 분야는 null이 될 수 없습니다.");
+        }
+        if (payload.programmingLanguage === null) {
+            throw new common_1.BadRequestException("코딩 언어는는 null이 될 수 없습니다.");
+        }
         return {
             email: payload.email,
             name: payload.name,
@@ -83,6 +92,9 @@ let UserService = class UserService {
             imageUrl: payload.imageUrl,
             preferredAlcoholId: payload.preferredAlcoholId,
             leadershipLevel: payload.leadershipLevel,
+            programmingLevel: payload.programmingLevel,
+            programmingField: payload.programmingField,
+            programmingLanguage: payload.programmingLanguage,
         };
     }
 };

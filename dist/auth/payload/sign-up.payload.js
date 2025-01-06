@@ -126,4 +126,28 @@ __decorate([
     }),
     __metadata("design:type", Object)
 ], SignUpPayload.prototype, "imageUrl", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    (0, swagger_1.ApiProperty)({
+        description: "프로그래밍 레벨",
+        type: Number,
+    }),
+    __metadata("design:type", Number)
+], SignUpPayload.prototype, "programmingLevel", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        description: "프로그래밍 분야",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], SignUpPayload.prototype, "programmingField", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        description: "프로그래밍 언어",
+        type: String,
+    }),
+    __metadata("design:type", String)
+], SignUpPayload.prototype, "programmingLanguage", void 0);
 //# sourceMappingURL=sign-up.payload.js.map

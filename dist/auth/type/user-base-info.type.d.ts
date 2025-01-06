@@ -17,5 +17,8 @@ export type UserBaseInfo = {
     refreshToken: string | null;
     registrationStatus: RegistrationStatus;
     preferredAlcoholId: number;
+    programmingLevel: number;
+    programmingField: string;
+    programmingLanguage: string;
     leadershipLevel: number;
 };

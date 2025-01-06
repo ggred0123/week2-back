@@ -75,6 +75,7 @@ export class UserDto {
     type: Number,
   })
   preferredAlcoholId!: number;
+
   @ApiProperty({
     description: "코딩 레벨",
     type: Number,
@@ -92,7 +93,7 @@ export class UserDto {
     type: String,
   })
   programmingLanguage!: string;
-  
+
   static from(data: UserData): UserDto {
     return {
       id: data.id,
@@ -105,12 +106,11 @@ export class UserDto {
       mbtiId: data.mbtiId,
       classId: data.classId,
       imageUrl: data.imageUrl,
-      programmingLevel : data.programmingLevel,
+      programmingLevel: data.programmingLevel,
       programmingField: data.programmingField,
-      programmingLanguage:data.programmingLanguage,
+      programmingLanguage: data.programmingLanguage,
       preferredAlcoholId: data.preferredAlcoholId,
       leadershipLevel: data.leadershipLevel,
-      
     };
   }
 

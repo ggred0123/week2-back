@@ -107,4 +107,25 @@ export class SignUpPayload {
     nullable: true,
   })
   imageUrl?: string | null;
+
+  @IsInt()
+  @ApiProperty({
+    description: "프로그래밍 레벨",
+    type: Number,
+  })
+  programmingLevel!: number;
+
+  @IsString()
+  @ApiProperty({
+    description: "프로그래밍 분야",
+    type: String,
+  })
+  programmingField!: string;
+
+  @IsString()
+  @ApiProperty({
+    description: "프로그래밍 언어",
+    type: String,
+  })
+  programmingLanguage!: string;
 }

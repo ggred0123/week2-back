@@ -13,6 +13,9 @@ export declare class UserDto {
     birthday: Date;
     leadershipLevel: number;
     preferredAlcoholId: number;
+    programmingLevel: number;
+    programmingField: string;
+    programmingLanguage: string;
     static from(data: UserData): UserDto;
     static fromArray(data: UserData[]): UserDto[];
 }

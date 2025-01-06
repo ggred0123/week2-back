@@ -41,6 +41,9 @@ let UserRepository = class UserRepository {
                 madCampStatus: data.madCampStatus,
                 preferredAlcoholId: data.preferredAlcoholId,
                 leadershipLevel: data.leadershipLevel,
+                programmingLevel: data.programmingLevel,
+                programmingField: data.programmingField,
+                programmingLanguage: data.programmingLanguage,
             },
             select: {
                 id: true,
@@ -55,6 +58,9 @@ let UserRepository = class UserRepository {
                 imageUrl: true,
                 name: true,
                 birthday: true,
+                programmingLevel: true,
+                programmingField: true,
+                programmingLanguage: true,
             },
         });
     }

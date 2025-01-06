@@ -111,6 +111,34 @@ __decorate([
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsPositive)(),
     (0, swagger_1.ApiPropertyOptional)({
+        description: "코딩 레벨",
+        type: Number,
+    }),
+    __metadata("design:type", Object)
+], UpdateUserPayload.prototype, "programmingLevel", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiPropertyOptional)({
+        description: "코딩 분야",
+        type: String,
+    }),
+    __metadata("design:type", Object)
+], UpdateUserPayload.prototype, "programmingField", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiPropertyOptional)({
+        description: "코딩 언어",
+        type: String,
+    }),
+    __metadata("design:type", Object)
+], UpdateUserPayload.prototype, "programmingLanguage", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsPositive)(),
+    (0, swagger_1.ApiPropertyOptional)({
         description: "선호 알콜 ID",
         type: Number,
     }),
