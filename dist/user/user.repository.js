@@ -22,11 +22,7 @@ let UserRepository = class UserRepository {
                 id: userId,
             },
             include: {
-                preferredAlcohol: {
-                    select: {
-                        alcoholId: true,
-                    },
-                },
+                preferredAlcohol: true,
             },
         });
     }
@@ -43,24 +39,13 @@ let UserRepository = class UserRepository {
                 classId: data.classId,
                 imageUrl: data.imageUrl,
                 madCampStatus: data.madCampStatus,
-                preferredAlcohol: data.alcoholIds
-                    ? {
-                        deleteMany: {},
-                        createMany: {
-                            data: data.alcoholIds.map((alcoholId) => ({
-                                alcoholId,
-                            })),
-                        },
-                    }
-                    : undefined,
+                preferredAlcoholId: data.preferredAlcoholId,
+                leadershipLevel: data.leadershipLevel,
             },
             select: {
                 id: true,
-                preferredAlcohol: {
-                    select: {
-                        alcoholId: true,
-                    },
-                },
+                preferredAlcoholId: true,
+                leadershipLevel: true,
                 universityId: true,
                 alcoholLevel: true,
                 madCampStatus: true,

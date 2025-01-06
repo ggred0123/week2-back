@@ -9,6 +9,16 @@ import {
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { MadCampStatus, Sex } from "src/user/enum/user.enum";
+enum UserPreferredAlcohol {
+  Beer = "Beer",
+  Wine = "Wine",
+  Cocktail = "Cocktail",
+  Mixed = "Mixed",
+  Soju = "Soju",
+  SoftDrink = "SoftDrink",
+  None = "None",
+}
+export { UserPreferredAlcohol };
 
 export class SignUpPayload {
   @IsString()
@@ -24,6 +34,20 @@ export class SignUpPayload {
     type: Number,
   })
   alcoholLevel!: number;
+
+  @IsInt()
+  @ApiProperty({
+    description: "선호 알콜",
+    type: Number,
+  })
+  preferredAlcoholId!: number;
+
+  @IsInt()
+  @ApiProperty({
+    description: "리더십 레벨",
+    type: Number,
+  })
+  leadershipLevel!: number;
 
   @IsEnum(MadCampStatus)
   @ApiProperty({

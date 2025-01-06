@@ -84,8 +84,12 @@ export class UserService {
       throw new BadRequestException("알콜 레벨은 null이 될 수 없습니다.");
     }
 
-    if (payload.alcoholIds === null) {
-      throw new BadRequestException("알콜 ID는 null이 될 수 없습니다.");
+    if (payload.preferredAlcoholId === null) {
+      throw new BadRequestException("선호 알콜 ID는 null이 될 수 없습니다.");
+    }
+
+    if (payload.leadershipLevel === null) {
+      throw new BadRequestException("리더십 레벨은 null이 될 수 없습니다.");
     }
 
     return {
@@ -99,7 +103,8 @@ export class UserService {
       mbtiId: payload.mbtiId,
       classId: payload.classId,
       imageUrl: payload.imageUrl,
-      alcoholIds: payload.alcoholIds,
+      preferredAlcoholId: payload.preferredAlcoholId,
+      leadershipLevel: payload.leadershipLevel,
     };
   }
 }

@@ -65,10 +65,16 @@ export class UserDto {
   birthday!: Date;
 
   @ApiProperty({
-    description: "선호 알콜",
-    type: [Number],
+    description: "리더십 레벨",
+    type: Number,
   })
-  alcoholIds!: number[];
+  leadershipLevel!: number;
+
+  @ApiProperty({
+    description: "선호 알콜",
+    type: Number,
+  })
+  preferredAlcoholId!: number;
 
   static from(data: UserData): UserDto {
     return {
@@ -82,7 +88,8 @@ export class UserDto {
       mbtiId: data.mbtiId,
       classId: data.classId,
       imageUrl: data.imageUrl,
-      alcoholIds: data.preferredAlcohol.map((alcohol) => alcohol.alcoholId),
+      preferredAlcoholId: data.preferredAlcoholId,
+      leadershipLevel: data.leadershipLevel,
     };
   }
 

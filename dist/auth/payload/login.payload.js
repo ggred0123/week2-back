@@ -18,17 +18,9 @@ exports.LoginPayload = LoginPayload;
 __decorate([
     (0, class_validator_1.IsEmail)(),
     (0, swagger_1.ApiProperty)({
-        description: '이메일',
+        description: "이메일",
         type: String,
     }),
     __metadata("design:type", String)
 ], LoginPayload.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, swagger_1.ApiProperty)({
-        description: '비밀번호',
-        type: String,
-    }),
-    __metadata("design:type", String)
-], LoginPayload.prototype, "password", void 0);
 //# sourceMappingURL=login.payload.js.map

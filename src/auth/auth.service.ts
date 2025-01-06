@@ -21,6 +21,14 @@ export class AuthService {
     private readonly passwordService: BcryptPasswordService,
     private readonly tokenService: TokenService
   ) {}
+  async login(payload: LoginPayload): Promise<Tokens> {
+    const user = await this.authRepository.getUserByEmail(payload.email);
+    if (!user) {
+      throw new NotFoundException("존재하지 않는 이메일입니다.");
+    }
+
+    return this.generateTokens(user.id);
+  }
 
   async refresh(refreshToken: string): Promise<Tokens> {
     const data = this.tokenService.verifyRefreshToken(refreshToken);
@@ -36,8 +44,6 @@ export class AuthService {
 
     return this.generateTokens(user.id);
   }
-
- 
 
   private async generateTokens(userId: number): Promise<Tokens> {
     const tokens = this.tokenService.generateTokens({ userId });
@@ -83,6 +89,8 @@ export class AuthService {
         sex: "MALE",
         birthday: new Date(),
         registrationStatus: "TEMPORARY",
+        preferredAlcoholId: 1,
+        leadershipLevel: 1,
       };
 
       const newUser = await this.authRepository.createUser(signUpData);

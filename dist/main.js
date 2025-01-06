@@ -10,9 +10,28 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
         origin: ["http://localhost:3000", "http://localhost:5173"],
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
         credentials: true,
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: [
+            "Content-Type",
+            "Authorization",
+            "x-amz-date",
+            "x-amz-acl",
+            "x-amz-content-sha256",
+            "x-amz-meta-*",
+            "x-amz-credential",
+            "x-amz-algorithm",
+            "x-amz-security-token",
+            "x-amz-signature",
+            "Access-Control-Allow-Origin",
+        ],
+        exposedHeaders: [
+            "x-amz-server-side-encryption",
+            "x-amz-request-id",
+            "x-amz-id-2",
+            "ETag",
+        ],
+        maxAge: 3600,
     });
     app.useGlobalPipes(new common_1.ValidationPipe({
         transform: true,

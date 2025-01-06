@@ -31,6 +31,8 @@ let AuthRepository = class AuthRepository {
                 sex: data.sex,
                 imageUrl: data.imageUrl,
                 registrationStatus: data.registrationStatus,
+                preferredAlcoholId: data.preferredAlcoholId,
+                leadershipLevel: data.leadershipLevel,
             },
             select: {
                 id: true,
@@ -47,6 +49,8 @@ let AuthRepository = class AuthRepository {
                 imageUrl: true,
                 refreshToken: true,
                 registrationStatus: true,
+                preferredAlcoholId: true,
+                leadershipLevel: true,
             },
         });
     }
@@ -68,9 +72,12 @@ let AuthRepository = class AuthRepository {
                 imageUrl: data.imageUrl,
                 refreshToken: data.refreshToken,
                 registrationStatus: data.registrationStatus,
+                preferredAlcoholId: data.preferredAlcoholId,
+                leadershipLevel: data.leadershipLevel,
             },
             select: {
                 id: true,
+                email: true,
                 name: true,
                 birthday: true,
                 universityId: true,
@@ -83,6 +90,8 @@ let AuthRepository = class AuthRepository {
                 imageUrl: true,
                 refreshToken: true,
                 registrationStatus: true,
+                preferredAlcoholId: true,
+                leadershipLevel: true,
             },
         });
     }
@@ -93,6 +102,7 @@ let AuthRepository = class AuthRepository {
             },
             select: {
                 id: true,
+                email: true,
                 name: true,
                 birthday: true,
                 universityId: true,
@@ -105,6 +115,8 @@ let AuthRepository = class AuthRepository {
                 imageUrl: true,
                 refreshToken: true,
                 registrationStatus: true,
+                preferredAlcoholId: true,
+                leadershipLevel: true,
             },
         });
     }
@@ -128,6 +140,8 @@ let AuthRepository = class AuthRepository {
                 imageUrl: true,
                 refreshToken: true,
                 registrationStatus: true,
+                preferredAlcoholId: true,
+                leadershipLevel: true,
             },
         });
     }

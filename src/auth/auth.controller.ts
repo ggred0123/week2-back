@@ -26,13 +26,37 @@ import { CurrentUser } from "./decorator/user.decorator";
 import { UserBaseInfo } from "./type/user-base-info.type";
 import { JwtAuthGuard } from "./guard/jwt-auth.guard";
 import { AuthGuard } from "@nestjs/passport";
+import { LoginPayload } from "./payload/login.payload";
 @Controller("auth")
 @ApiTags("Auth API")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post("login")
+  @HttpCode(200)
+  @ApiOperation({ summary: "로그인" })
+  @ApiOkResponse({ type: TokenDto })
+  async login(
+    @Body() payload: LoginPayload,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<TokenDto> {
+    const tokens = await this.authService.login(payload);
+
+    // refresh Token은 쿠키로
+    res.cookie("refreshToken", tokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      // 이후 실제 도메인으로 변경
+      domain: "localhost",
+    });
+
+    return TokenDto.from(tokens.accessToken);
+  }
+
   @Put("complete-profile")
-  @UseGuards(JwtAuthGuard) // 구글 로그인에서 받은 토큰으로 인증
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: "구글 로그인 후 추가 정보 입력" })
   async completeProfile(
     @Body() payload: SignUpPayload,

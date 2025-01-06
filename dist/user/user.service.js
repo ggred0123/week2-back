@@ -64,8 +64,11 @@ let UserService = class UserService {
         if (payload.alcoholLevel === null) {
             throw new common_1.BadRequestException("알콜 레벨은 null이 될 수 없습니다.");
         }
-        if (payload.alcoholIds === null) {
-            throw new common_1.BadRequestException("알콜 ID는 null이 될 수 없습니다.");
+        if (payload.preferredAlcoholId === null) {
+            throw new common_1.BadRequestException("선호 알콜 ID는 null이 될 수 없습니다.");
+        }
+        if (payload.leadershipLevel === null) {
+            throw new common_1.BadRequestException("리더십 레벨은 null이 될 수 없습니다.");
         }
         return {
             email: payload.email,
@@ -78,7 +81,8 @@ let UserService = class UserService {
             mbtiId: payload.mbtiId,
             classId: payload.classId,
             imageUrl: payload.imageUrl,
-            alcoholIds: payload.alcoholIds,
+            preferredAlcoholId: payload.preferredAlcoholId,
+            leadershipLevel: payload.leadershipLevel,
         };
     }
 };

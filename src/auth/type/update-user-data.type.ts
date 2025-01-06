@@ -11,10 +11,11 @@ export type UpdateUserData = {
   classId?: number;
   mbtiId?: number;
   sex?: Sex;
-  alcoholIds?: number[];
   madCampStatus?: MadCampStatus;
   alcoholLevel?: number;
   imageUrl?: string | null;
   refreshToken?: string | null;
   registrationStatus?: RegistrationStatus;
+  preferredAlcoholId?: number;
+  leadershipLevel?: number;
 };

@@ -92,14 +92,22 @@ export class UpdateUserPayload {
   imageUrl?: string | null;
 
   @IsOptional()
-  @IsInt({ each: true })
-  @IsPositive({ each: true })
-  @IsArray()
+  @IsInt()
+  @IsPositive()
   @ApiPropertyOptional({
     description: "선호 알콜 ID",
-    type: [Number],
+    type: Number,
   })
-  alcoholIds?: number[] | null;
+  preferredAlcoholId?: number | null;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  @ApiPropertyOptional({
+    description: "리더십 레벨",
+    type: Number,
+  })
+  leadershipLevel?: number | null;
 
   @IsOptional()
   @IsString()

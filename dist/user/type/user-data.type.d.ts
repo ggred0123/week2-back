@@ -4,13 +4,12 @@ export type UserData = {
     universityId: number;
     alcoholLevel: number;
     madCampStatus: MadCampStatus;
-    preferredAlcohol: {
-        alcoholId: number;
-    }[];
+    preferredAlcoholId: number;
     sex: Sex;
     mbtiId: number;
     classId: number;
     imageUrl: string | null;
     name: string;
     birthday: Date;
+    leadershipLevel: number;
 };

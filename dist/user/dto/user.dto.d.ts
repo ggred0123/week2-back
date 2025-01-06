@@ -11,7 +11,8 @@ export declare class UserDto {
     imageUrl?: string | null;
     name: string;
     birthday: Date;
-    alcoholIds: number[];
+    leadershipLevel: number;
+    preferredAlcoholId: number;
     static from(data: UserData): UserDto;
     static fromArray(data: UserData[]): UserDto[];
 }

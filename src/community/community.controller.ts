@@ -114,14 +114,13 @@ export class CommunityController {
     );
   }
 
-  @Get("communities")
+  @Get()
   @ApiOperation({ summary: "커뮤니티를 조회합니다." })
   @ApiCreatedResponse({ type: CommunityListDto })
   async getCommunities(): Promise<CommunityListDto> {
     return this.communityService.getCommunities();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":communityContentId/hotcontent")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

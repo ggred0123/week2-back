@@ -108,15 +108,24 @@ __decorate([
 ], UpdateUserPayload.prototype, "imageUrl", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsInt)({ each: true }),
-    (0, class_validator_1.IsPositive)({ each: true }),
-    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsPositive)(),
     (0, swagger_1.ApiPropertyOptional)({
         description: "선호 알콜 ID",
-        type: [Number],
+        type: Number,
     }),
     __metadata("design:type", Object)
-], UpdateUserPayload.prototype, "alcoholIds", void 0);
+], UpdateUserPayload.prototype, "preferredAlcoholId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsPositive)(),
+    (0, swagger_1.ApiPropertyOptional)({
+        description: "리더십 레벨",
+        type: Number,
+    }),
+    __metadata("design:type", Object)
+], UpdateUserPayload.prototype, "leadershipLevel", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

@@ -25,7 +25,8 @@ class UserDto {
             mbtiId: data.mbtiId,
             classId: data.classId,
             imageUrl: data.imageUrl,
-            alcoholIds: data.preferredAlcohol.map((alcohol) => alcohol.alcoholId),
+            preferredAlcoholId: data.preferredAlcoholId,
+            leadershipLevel: data.leadershipLevel,
         };
     }
     static fromArray(data) {
@@ -106,11 +107,18 @@ __decorate([
 ], UserDto.prototype, "birthday", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        description: "선호 알콜",
-        type: [Number],
+        description: "리더십 레벨",
+        type: Number,
     }),
-    __metadata("design:type", Array)
-], UserDto.prototype, "alcoholIds", void 0);
+    __metadata("design:type", Number)
+], UserDto.prototype, "leadershipLevel", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "선호 알콜",
+        type: Number,
+    }),
+    __metadata("design:type", Number)
+], UserDto.prototype, "preferredAlcoholId", void 0);
 class UserListDto {
     static from(data) {
         return {

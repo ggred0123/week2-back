@@ -9,11 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SignUpPayload = void 0;
+exports.SignUpPayload = exports.UserPreferredAlcohol = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const user_enum_1 = require("../../user/enum/user.enum");
+var UserPreferredAlcohol;
+(function (UserPreferredAlcohol) {
+    UserPreferredAlcohol["Beer"] = "Beer";
+    UserPreferredAlcohol["Wine"] = "Wine";
+    UserPreferredAlcohol["Cocktail"] = "Cocktail";
+    UserPreferredAlcohol["Mixed"] = "Mixed";
+    UserPreferredAlcohol["Soju"] = "Soju";
+    UserPreferredAlcohol["SoftDrink"] = "SoftDrink";
+    UserPreferredAlcohol["None"] = "None";
+})(UserPreferredAlcohol || (exports.UserPreferredAlcohol = UserPreferredAlcohol = {}));
 class SignUpPayload {
 }
 exports.SignUpPayload = SignUpPayload;
@@ -33,6 +43,22 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], SignUpPayload.prototype, "alcoholLevel", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    (0, swagger_1.ApiProperty)({
+        description: "선호 알콜",
+        type: Number,
+    }),
+    __metadata("design:type", Number)
+], SignUpPayload.prototype, "preferredAlcoholId", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    (0, swagger_1.ApiProperty)({
+        description: "리더십 레벨",
+        type: Number,
+    }),
+    __metadata("design:type", Number)
+], SignUpPayload.prototype, "leadershipLevel", void 0);
 __decorate([
     (0, class_validator_1.IsEnum)(user_enum_1.MadCampStatus),
     (0, swagger_1.ApiProperty)({

@@ -9,6 +9,7 @@ export declare class UpdateUserPayload {
     classId?: number | null;
     alcoholLevel?: number | null;
     imageUrl?: string | null;
-    alcoholIds?: number[] | null;
+    preferredAlcoholId?: number | null;
+    leadershipLevel?: number | null;
     madCampStatus?: MadCampStatus | null;
 }

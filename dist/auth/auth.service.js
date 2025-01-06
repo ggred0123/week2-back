@@ -20,6 +20,13 @@ let AuthService = class AuthService {
         this.passwordService = passwordService;
         this.tokenService = tokenService;
     }
+    async login(payload) {
+        const user = await this.authRepository.getUserByEmail(payload.email);
+        if (!user) {
+            throw new common_1.NotFoundException("존재하지 않는 이메일입니다.");
+        }
+        return this.generateTokens(user.id);
+    }
     async refresh(refreshToken) {
         const data = this.tokenService.verifyRefreshToken(refreshToken);
         const user = await this.authRepository.getUserById(data.userId);
@@ -65,6 +72,8 @@ let AuthService = class AuthService {
                 sex: "MALE",
                 birthday: new Date(),
                 registrationStatus: "TEMPORARY",
+                preferredAlcoholId: 1,
+                leadershipLevel: 1,
             };
             const newUser = await this.authRepository.createUser(signUpData);
             const tokens = await this.generateTokens(newUser.id);
