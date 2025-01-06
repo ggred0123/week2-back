@@ -122,7 +122,6 @@ export class AuthController {
         httpOnly: true,
         secure: true,
         sameSite: "strict",
-        domain: "localhost",
       });
 
       // 프론트엔드 URL을 직접 지정
