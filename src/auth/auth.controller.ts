@@ -125,14 +125,17 @@ export class AuthController {
       });
 
       // 프론트엔드 URL을 직접 지정
-      const frontendURL = "http://localhost:3000"; // 수정된 부분
+      const frontendURL =
+        "https://week2-front-305743959550.asia-northeast3.run.app"; // 수정된 부분
 
       return res.redirect(
         `${frontendURL}/auth/google/callback?accessToken=${tokens.accessToken}&isNewUser=${isNewUser}`
       );
     } catch (error) {
       console.error("Error in Google Auth Callback:", error);
-      return res.redirect("http://localhost:3000/error");
+      return res.redirect(
+        "https://week2-front-305743959550.asia-northeast3.run.app/error"
+      );
     }
   }
 }
