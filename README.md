@@ -19,7 +19,9 @@
    
    
 
-
+## Other Git Repo
+https://github.com/ggred0123/week2-front
+https://github.com/ggred0123/week2-AI
 
 ## Teams
 
