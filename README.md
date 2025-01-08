@@ -9,13 +9,22 @@
 
 
 
-
-
-### ⛭ **Team**
-
+<img width="817" alt="스크린샷 2025-01-08 오후 6 09 43" src="https://github.com/user-attachments/assets/8cb21f26-6622-40ad-8157-fff2a8ee1677" />
 
 
 
+
+
+
+## Teams
+
+
+**Korea Univ. Seoul Campus** 
+- **Youngmin Kim**  
+  [![GitHub Badge](https://img.shields.io/badge/GitHub-181717?&logo=GitHub&logoColor=white&style=for-the-badge&link=https://github.com/ggred0123)](https://github.com/ggred0123)
+
+- **Sanggeun Oh**  
+  [![GitHub Badge](https://img.shields.io/badge/GitHub-181717?&logo=GitHub&logoColor=white&style=for-the-badge&link=https://github.com/Ohsangguen)](https://github.com/Ohsangguen)
 
 
 
