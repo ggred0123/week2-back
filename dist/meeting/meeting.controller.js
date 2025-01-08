@@ -35,6 +35,9 @@ let MeetingController = class MeetingController {
     async getMyMeetings(user) {
         return this.meetingService.getMyMeetings(user);
     }
+    async getMeetingJoinUsersNumber(meetingId) {
+        return this.meetingService.getMeetingJoinUsersNumber(meetingId);
+    }
     async patchUpdateMeeting(meetingId, payload, user) {
         return this.meetingService.patchUpdateMeeting(meetingId, payload, user);
     }
@@ -81,6 +84,15 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], MeetingController.prototype, "getMyMeetings", null);
+__decorate([
+    (0, common_1.Get)(":meetingId/meetingJoinUsers"),
+    (0, swagger_1.ApiOperation)({ summary: "모임 참가자 조회" }),
+    (0, swagger_1.ApiOkResponse)({ type: Number }),
+    __param(0, (0, common_1.Param)("meetingId", common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], MeetingController.prototype, "getMeetingJoinUsersNumber", null);
 __decorate([
     (0, common_1.Patch)(":meetingId"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

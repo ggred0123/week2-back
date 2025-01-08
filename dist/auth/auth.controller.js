@@ -52,7 +52,6 @@ let AuthController = class AuthController {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
-            domain: "localhost",
         });
         return token_dto_1.TokenDto.from(tokens.accessToken);
     }
@@ -71,14 +70,13 @@ let AuthController = class AuthController {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict",
-                domain: "localhost",
             });
-            const frontendURL = "http://localhost:3000";
+            const frontendURL = "https://week2-front-305743959550.asia-northeast3.run.app";
             return res.redirect(`${frontendURL}/auth/google/callback?accessToken=${tokens.accessToken}&isNewUser=${isNewUser}`);
         }
         catch (error) {
             console.error("Error in Google Auth Callback:", error);
-            return res.redirect("http://localhost:3000/error");
+            return res.redirect("https://week2-front-305743959550.asia-northeast3.run.app/error");
         }
     }
 };

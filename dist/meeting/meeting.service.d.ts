@@ -13,6 +13,7 @@ export declare class MeetingService {
     patchUpdateMeeting(meetingId: number, payload: PatchUpdateMeetingPayload, user: UserBaseInfo): Promise<MeetingDto>;
     deleteMeeting(meetingId: number, user: UserBaseInfo): Promise<void>;
     joinMeeting(meetingId: number, user: UserBaseInfo): Promise<void>;
+    getMeetingJoinUsersNumber(meetingId: number): Promise<number>;
     leaveMeeting(meetingId: number, user: UserBaseInfo): Promise<void>;
     private validateNullOf;
 }

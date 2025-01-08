@@ -10,21 +10,27 @@ import * as cookieParser from "cookie-parser";
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // CORS 설정 업데이트
   app.enableCors({
-    origin: ["http://localhost:3000", "http://localhost:5173"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS", // OPTIONS 추가
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://week2-front-305743959550.asia-northeast3.run.app", // Cloud Run 프론트엔드 도메인
+      /\.asia-northeast3\.run\.app$/, // Cloud Run 도메인 패턴 매칭
+    ],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
     allowedHeaders: [
       "Content-Type",
       "Authorization",
-      "x-amz-date", // S3 필수 헤더
-      "x-amz-acl", // S3 ACL 설정 헤더
-      "x-amz-content-sha256", // S3 컨텐츠 해시
-      "x-amz-meta-*", // S3 메타데이터
-      "x-amz-credential", // S3 인증 정보
-      "x-amz-algorithm", // S3 서명 알고리즘
-      "x-amz-security-token", // S3 보안 토큰
-      "x-amz-signature", // S3 서명
+      "x-amz-date",
+      "x-amz-acl",
+      "x-amz-content-sha256",
+      "x-amz-meta-*",
+      "x-amz-credential",
+      "x-amz-algorithm",
+      "x-amz-security-token",
+      "x-amz-signature",
       "Access-Control-Allow-Origin",
     ],
     exposedHeaders: [
@@ -66,8 +72,6 @@ async function bootstrap() {
   httpAdapter.get("/", (req, res) => {
     res.redirect("/docs");
   });
-
-  // Cloud Run을 위한 포트 설정
 
   const port = process.env.PORT || 3000;
   await app.listen(port, "0.0.0.0", () => {

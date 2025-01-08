@@ -18,10 +18,7 @@ import { PatchUpdateMeetingPayload } from "./payload/patch-update-meeting.payloa
 export class MeetingService {
   constructor(private readonly meetingRepository: MeetingRepository) {}
 
-  async createMeeting(
-    payload: CreateMeetingPayload,
-    user: UserBaseInfo
-  ): Promise<MeetingDto> {
+  async createMeeting(payload: CreateMeetingPayload): Promise<MeetingDto> {
     const [category] = await Promise.all([
       this.meetingRepository.findCategoryById(payload.categoryId),
     ]);
@@ -41,7 +38,7 @@ export class MeetingService {
     }
 
     const data: CreateMeetingData = {
-      hostId: user.id,
+      hostId: 24,
       title: payload.title,
       description: payload.description,
       categoryId: payload.categoryId,
@@ -165,6 +162,13 @@ export class MeetingService {
     }
 
     await this.meetingRepository.joinMeeting(meetingId, user.id);
+  }
+
+  async getMeetingJoinUsersNumber(meetingId: number): Promise<number> {
+    const participantsIds =
+      await this.meetingRepository.getParticipantsIds(meetingId);
+
+    return participantsIds.length;
   }
 
   async leaveMeeting(meetingId: number, user: UserBaseInfo): Promise<void> {

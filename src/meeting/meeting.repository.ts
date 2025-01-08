@@ -23,6 +23,11 @@ export class MeetingRepository {
         maxPeople: data.maxPeople,
         location: data.location,
         keyword: data.keyword,
+        meetingJoinUser: {
+          create: {
+            userId: data.hostId,
+          },
+        },
       },
       select: {
         id: true,

@@ -20,6 +20,7 @@ const user_dto_1 = require("./dto/user.dto");
 const jwt_auth_guard_1 = require("../auth/guard/jwt-auth.guard");
 const update_user_payload_1 = require("./payload/update-user.payload");
 const user_decorator_1 = require("../auth/decorator/user.decorator");
+const common_2 = require("@nestjs/common");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -29,6 +30,19 @@ let UserController = class UserController {
     }
     async updateUser(userId, payload, user) {
         return this.userService.updateUser(userId, payload, user);
+    }
+    async getMe(user) {
+        console.log("Current User:", user);
+        try {
+            if (!user || !user.id) {
+                throw new common_2.BadRequestException("유효하지 않은 사용자 정보입니다.");
+            }
+            return await this.userService.getUserById(user.id);
+        }
+        catch (error) {
+            console.error("Error in getMe:", error);
+            throw new common_2.InternalServerErrorException("서버 내부 오류가 발생했습니다.");
+        }
     }
 };
 exports.UserController = UserController;
@@ -54,6 +68,17 @@ __decorate([
     __metadata("design:paramtypes", [Number, update_user_payload_1.UpdateUserPayload, Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "updateUser", null);
+__decorate([
+    (0, common_1.Get)("me"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: "내 정보를 가져옵니다" }),
+    (0, swagger_1.ApiOkResponse)({ type: user_dto_1.UserDto }),
+    __param(0, (0, user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getMe", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [user_service_1.UserService])

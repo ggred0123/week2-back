@@ -112,6 +112,10 @@ let MeetingService = class MeetingService {
         }
         await this.meetingRepository.joinMeeting(meetingId, user.id);
     }
+    async getMeetingJoinUsersNumber(meetingId) {
+        const participantsIds = await this.meetingRepository.getParticipantsIds(meetingId);
+        return participantsIds.length;
+    }
     async leaveMeeting(meetingId, user) {
         const meeting = await this.meetingRepository.findMeetingById(meetingId);
         if (!meeting) {

@@ -10,6 +10,7 @@ export declare class MeetingController {
     createMeeting(payload: CreateMeetingPayload, user: UserBaseInfo): Promise<MeetingDto>;
     getMeetings(query: MeetingQuery): Promise<MeetingListDto>;
     getMyMeetings(user: UserBaseInfo): Promise<MeetingListDto>;
+    getMeetingJoinUsersNumber(meetingId: number): Promise<number>;
     patchUpdateMeeting(meetingId: number, payload: PatchUpdateMeetingPayload, user: UserBaseInfo): Promise<MeetingDto>;
     deleteMeeting(meetingId: number, user: UserBaseInfo): Promise<void>;
     joinMeeting(meetingId: number, user: UserBaseInfo): Promise<void>;

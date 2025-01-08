@@ -7,4 +7,5 @@ export declare class UserController {
     constructor(userService: UserService);
     getUserById(userId: number): Promise<UserDto>;
     updateUser(userId: number, payload: UpdateUserPayload, user: UserBaseInfo): Promise<UserDto>;
+    getMe(user: UserBaseInfo): Promise<UserDto>;
 }

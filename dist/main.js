@@ -9,7 +9,12 @@ const path_1 = require("path");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: ["http://localhost:3000", "http://localhost:5173"],
+        origin: [
+            "http://localhost:3000",
+            "http://localhost:5173",
+            "https://week2-front-305743959550.asia-northeast3.run.app",
+            /\.asia-northeast3\.run\.app$/,
+        ],
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
         credentials: true,
         allowedHeaders: [

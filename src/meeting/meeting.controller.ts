@@ -36,15 +36,12 @@ export class MeetingController {
   constructor(private readonly meetingService: MeetingService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiOperation({ summary: "모임 생성" })
   @ApiCreatedResponse({ type: MeetingDto })
   async createMeeting(
-    @Body() payload: CreateMeetingPayload,
-    @CurrentUser() user: UserBaseInfo
+    @Body() payload: CreateMeetingPayload
   ): Promise<MeetingDto> {
-    return this.meetingService.createMeeting(payload, user);
+    return this.meetingService.createMeeting(payload);
   }
 
   @Get(":categoryId")
@@ -63,6 +60,15 @@ export class MeetingController {
     @CurrentUser() user: UserBaseInfo
   ): Promise<MeetingListDto> {
     return this.meetingService.getMyMeetings(user);
+  }
+
+  @Get(":meetingId/meetingJoinUsers")
+  @ApiOperation({ summary: "모임 참가자 조회" })
+  @ApiOkResponse({ type: Number })
+  async getMeetingJoinUsersNumber(
+    @Param("meetingId", ParseIntPipe) meetingId: number
+  ): Promise<number> {
+    return this.meetingService.getMeetingJoinUsersNumber(meetingId);
   }
 
   @Patch(":meetingId")
